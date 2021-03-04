@@ -1,5 +1,5 @@
 # CryptoManager
 
-Shayan Mohammadi
-Shayan Talaei
-Kamyar Maroufi
+Shayan Mohammadi \
+Shayan Talaei \
+Kamyar Maroufi \
