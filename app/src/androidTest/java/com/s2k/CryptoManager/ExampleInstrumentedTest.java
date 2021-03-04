@@ -1,4 +1,4 @@
-package com.s2k.cryptomanager;
+package com.s2k.CryptoManager;
 
 import android.content.Context;
 
