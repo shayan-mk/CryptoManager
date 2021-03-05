@@ -12,8 +12,7 @@
         android:theme="@style/Theme.CryptoManager">
         <activity
             android:name="com.s2k.CryptoManager.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.CryptoManager.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
