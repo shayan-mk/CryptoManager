@@ -6,14 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.ViewHolder> {
-    List<CryptoData> cryptoDataList;
+    private List<CryptoData> cryptoDataList;
+
+    private Context context;
     public CryptoListAdapter(List<CryptoData> cryptoDataList) {
         this.cryptoDataList = cryptoDataList;
     }
@@ -21,7 +22,7 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -36,6 +37,9 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CryptoData data = cryptoDataList.get(position);
 
+        GlideApp.with(context)
+                .load(data.iconUrl)
+                .into(holder.icon);
         //holder.icon
         holder.name.setText(data.name);
         holder.oneHourChange.setText("1h: " + data.oneHourChange + "%");
