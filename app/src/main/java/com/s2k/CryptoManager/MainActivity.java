@@ -15,15 +15,24 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+    private Boolean isRefreshing;
+    private Boolean isLoadingMore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        isRefreshing = false;
+        isLoadingMore = false;
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
@@ -37,5 +46,81 @@ public class MainActivity extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvCryptos.getContext(),
                 ((LinearLayoutManager) rvCryptos.getLayoutManager()).getOrientation());
         rvCryptos.addItemDecoration(dividerItemDecoration);
+
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
+        // TODO week references
+        ImageButton refreshButton = (ImageButton) findViewById(R.id.cryptoRefreshButton);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRefreshing || isLoadingMore) {
+                    return;
+                }
+                isRefreshing = true;
+                progressBar.setVisibility(View.VISIBLE);
+
+                // TODO needs to call network api
+                new Thread(() -> {
+                    float progress = 0;
+                    while (true) {
+                        progress += 1;
+                        runOnUiThread(() -> progressBar.incrementProgressBy(1));
+
+                        if (progress > 100) {
+                            isRefreshing = false;
+                            runOnUiThread(() -> {
+                                progressBar.setProgress(0);
+                                progressBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        }
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+
+        ImageButton loadMoreButton = (ImageButton) findViewById(R.id.cryptoLoadMoreButton);
+        loadMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isRefreshing || isLoadingMore) {
+                    return;
+                }
+                isLoadingMore = true;
+                progressBar.setVisibility(View.VISIBLE);
+
+                // TODO needs to call network api
+                new Thread(() -> {
+                    float progress = 0;
+                    while (true) {
+                        progress += 1;
+                        runOnUiThread(() -> progressBar.incrementProgressBy(1));
+
+                        if (progress > 100) {
+                            isLoadingMore = false;
+                            runOnUiThread(() -> {
+                                progressBar.setProgress(0);
+                                progressBar.setVisibility(View.INVISIBLE);
+                            });
+                            break;
+                        }
+
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 }
