@@ -25,8 +25,12 @@ public class CryptoData {
         List<CryptoData> list = new ArrayList<>();
         CryptoData data1 = new CryptoData("", "BTC | Bitcoin", 0, -2, 2, 50000);
         CryptoData data2 = new CryptoData("", "ETH | Ethereum", 0, -2, 22, 1500);
-        list.add(data1);
-        list.add(data2);
+        for (int i = 0; i < 5; i++) {
+            list.add(data1);
+        }
+        for (int i = 0; i < 5; i++) {
+            list.add(data2);
+        }
         return list;
     }
 }
