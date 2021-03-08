@@ -17,5 +17,10 @@ public class NetworkManager implements Callable<List<CryptoData>> {
         return false;
     }
 
+    public List<CryptoData> getCryptoDataGroupInformation(int groupNumber){
+        return null;
+    }
+
+
 
 }
