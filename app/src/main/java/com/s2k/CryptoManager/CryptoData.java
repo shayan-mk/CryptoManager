@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CryptoData {
+    //TODO: symbol
     public String iconUrl; //maybe need to change
     public String name;
     public int oneHourChange;

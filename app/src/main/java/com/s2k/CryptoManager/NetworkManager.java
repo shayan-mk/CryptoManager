@@ -31,11 +31,6 @@ public class NetworkManager implements Callable<List<CryptoData>> {
         return null;
     }
 
-
-    public OHLC getCryptoDataDialog(CryptoData cryptoData){
-        return null;
-    }
-
     public enum Range {
         weekly,
         oneMonth,
@@ -88,14 +83,18 @@ public class NetworkManager implements Callable<List<CryptoData>> {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
 
-                if (!response.isSuccessful()) {
-                    throw new IOException("Unexpected code " + response);
-                } else {
-                    //extractCandlesFromResponse(response.body().string(), description);
+                    if (!response.isSuccessful()) {
+                        throw new IOException("Unexpected code " + response);
+                    } else {
+                    extractCandlesFromResponse(response.body().string(), description);
                 }
             }
         });
 
+    }
+
+    //TODO: pass candles to the handler
+    private void extractCandlesFromResponse(String body, String description){
     }
 
     private String getCurrentDate() {
