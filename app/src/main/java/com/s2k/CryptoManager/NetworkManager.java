@@ -9,7 +9,13 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     @Override
     public List<CryptoData> call() throws Exception {
-        //TODO: implement
+
         return null;
     }
+
+    public static boolean isConnectedToTheInternet(){
+        return false;
+    }
+
+
 }
