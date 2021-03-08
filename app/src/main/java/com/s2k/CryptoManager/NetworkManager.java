@@ -1,7 +1,11 @@
 package com.s2k.CryptoManager;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.github.mikephil.charting.components.Description;
 import com.s2k.CryptoManager.CryptoData;
 
 import java.io.IOException;
@@ -15,6 +19,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
 public class NetworkManager implements Callable<List<CryptoData>> {
 
     @Override
@@ -26,9 +31,17 @@ public class NetworkManager implements Callable<List<CryptoData>> {
     //Page one Activities!
 
     //Internet Connection!
-    public static boolean isConnectedToTheInternet(){
-        return false;
-    }
+    //TODO:
+    /*public static boolean isConnectedToTheInternet(){
+        ConnectivityManager cm =  (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }else {
+            return false;
+        }
+
+    }*/
 
 
     //Crypto coins' information
