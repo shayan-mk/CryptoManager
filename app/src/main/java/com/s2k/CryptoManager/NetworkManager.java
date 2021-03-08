@@ -21,6 +21,9 @@ public class NetworkManager implements Callable<List<CryptoData>> {
         return null;
     }
 
-
+    // what it should return?
+    public void getCryptoDataDialog(CryptoData cryptoData){
+        return;
+    }
 
 }
