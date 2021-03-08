@@ -23,14 +23,20 @@ public class NetworkManager implements Callable<List<CryptoData>> {
         return null;
     }
 
+    //Page one Activities!
+
+    //Internet Connection!
     public static boolean isConnectedToTheInternet(){
         return false;
     }
 
+
+    //Crypto coins' information
     public List<CryptoData> getCryptoDataGroupInformation(int groupNumber){
         return null;
     }
 
+    //Candles' data
     public enum Range {
         weekly,
         oneMonth,
@@ -41,8 +47,6 @@ public class NetworkManager implements Callable<List<CryptoData>> {
     // پارامتر اول هم نماد سکه مورد نظر خواهد بود
 
     public void getCandles(String symbol,Range range) {
-
-        OkHttpClient okHttpClient = new OkHttpClient();
 
         String miniUrl;
         final String description;
@@ -64,15 +68,16 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
         }
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://rest.coinapi.io/v1/ohlcv/".concat(symbol).concat("/USD/history?".concat(miniUrl)))
-                .newBuilder();
 
-        String url = urlBuilder.build().toString();
+
+        String url = buildURL("https://rest.coinapi.io/v1/ohlcv/".concat(symbol).concat("/USD/history?".concat(miniUrl)));
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
                 .addHeader("X-CoinAPI-Key", "YOUR_COIN_IO_API_KEY")
                 .build();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
 
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -95,6 +100,15 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     //TODO: pass candles to the handler
     private void extractCandlesFromResponse(String body, String description){
+    }
+
+    private String buildURL(String string){
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(string)
+                .newBuilder();
+
+        String url = urlBuilder.build().toString();
+
+        return url;
     }
 
     private String getCurrentDate() {
