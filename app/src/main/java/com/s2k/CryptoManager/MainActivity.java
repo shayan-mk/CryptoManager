@@ -7,6 +7,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CryptoListAdapter.OnItemClickListener {
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
         List<CryptoData> cryptoData = CryptoData.createCryptoDataList();
-        CryptoListAdapter adapter = new CryptoListAdapter(cryptoData);
+        CryptoListAdapter adapter = new CryptoListAdapter(this, cryptoData, this);
 
         rvCryptos.setAdapter(adapter);
         rvCryptos.setLayoutManager(new LinearLayoutManager(this));
@@ -122,5 +123,11 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         });
+    }
+
+    @Override
+    public void onItemClick(String symbol) {
+        DialogFragment dialogFragment = new OhclDialogFragment();
+        dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
     }
 }

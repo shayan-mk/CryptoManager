@@ -15,14 +15,16 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
     private List<CryptoData> cryptoDataList;
 
     private Context context;
-    public CryptoListAdapter(List<CryptoData> cryptoDataList) {
+    private OnItemClickListener listener;
+    public CryptoListAdapter(Context context, List<CryptoData> cryptoDataList, OnItemClickListener listener) {
+        this.context = context;
         this.cryptoDataList = cryptoDataList;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -40,12 +42,13 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         GlideApp.with(context)
                 .load(data.iconUrl)
                 .into(holder.icon);
-        //holder.icon
-        holder.name.setText(data.name);
+        holder.name.setText(data.symbol + " | " + data.name);
         holder.oneHourChange.setText("1h: " + data.oneHourChange + "%");
         holder.oneDayChange.setText("1d: " + data.oneDayChange + "%");
         holder.oneWeekChange.setText("7d: " + data.oneWeekChange + "%");
         holder.price.setText(data.price + "$");
+
+        holder.itemView.setOnClickListener(view -> listener.onItemClick(data.symbol));
     }
 
     @Override
@@ -76,5 +79,9 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
             oneWeekChange = (TextView) itemView.findViewById(R.id.crypto1WeekChange);
             price = (TextView) itemView.findViewById((R.id.cryptoPrice));
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(String symbol);
     }
 }
