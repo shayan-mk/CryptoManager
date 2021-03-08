@@ -32,8 +32,32 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
 
     //Crypto coins' information
-    public List<CryptoData> getCryptoDataGroupInformation(int groupNumber){
-        return null;
+    public void getCryptoDataGroupInformation(int groupNumber){
+        String url = buildURL("");
+
+        // your coin IO API key...
+        final Request request = new Request.Builder().url(url)
+                .addHeader("X-CoinAPI-Key", "YOUR_COIN_IO_API_KEY")
+                .build();
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.v("TAG", e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                } else {
+                    //TODO: pass the CryptoDataGroupInformation to the handler
+                }
+            }
+        });
     }
 
     //Candles' data
@@ -110,6 +134,7 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
         return url;
     }
+
 
     private String getCurrentDate() {
         return null;
