@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     private Boolean isLoadingMore;
     private Boolean isLoadingOhlc;
     private String loadingOhlcSymbol;
-    private Handler mHandler;
+    private Handler handler;
 
     public static final int DB_CRYPTO_LOAD = 1;
     public static final int DB_OHLC_LOAD = 2;
-    public static final int DB_CRYPTO_WRITE = 3;
-    public static final int DB_OHLC_WRITE = 4;
+    public static final int DB_CRYPTO_UPDATE = 3;
+    public static final int DB_OHLC_UPDATE = 4;
     public static final int NET_CRYPTO_LOAD = 5;
     public static final int NET_OHLC_LOAD = 6;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             }
         });
 
-        mHandler = new Handler(Looper.getMainLooper()) {
+        handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         List<CryptoData> cryptoDataList = (List<CryptoData>) msg.obj;
                         adapter.loadMoreCryptoData(cryptoDataList);
                         break;
-                    case DB_CRYPTO_WRITE:
+                    case DB_CRYPTO_UPDATE:
                         Log.d(TAG, "Message received: DB_CRYPTO_WRITE");
                         break;
                     case DB_OHLC_LOAD:
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         isLoadingOhlc = false;
                         loadingOhlcSymbol = "";
                         break;
-                    case DB_OHLC_WRITE:
+                    case DB_OHLC_UPDATE:
                         Log.d(TAG, "Message received: DB_OHLC_WRITE");
                         break;
                     case NET_CRYPTO_LOAD:
