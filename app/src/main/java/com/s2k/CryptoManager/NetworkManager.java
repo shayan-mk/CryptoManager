@@ -6,9 +6,12 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.github.mikephil.charting.components.Description;
+import com.google.gson.Gson;
 import com.s2k.CryptoManager.CryptoData;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -60,7 +63,10 @@ public class NetworkManager implements Callable<List<CryptoData>> {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 } else {
-                    //TODO: pass the CryptoDataGroupInformation to the handler
+                    Gson gson = new Gson();
+                    CryptoData[] cryptoData = gson.fromJson(response.body().string(), CryptoData[].class);
+                    List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
+                    //TODO: pass it to the handler
                 }
             }
         });
@@ -131,6 +137,11 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     //TODO: pass candles to the handler
     private void extractCandlesFromResponse(String body, String description){
+        Gson gson = new Gson();
+        OHLC[] ohlcs = gson.fromJson(body, OHLC[].class);
+        List<OHLC> OHLCList = Arrays.asList(ohlcs);
+        //TODO: pass it to the handler, description
+
     }
 
     private String buildURL(String string, HashMap<String, String> queryParameters){
