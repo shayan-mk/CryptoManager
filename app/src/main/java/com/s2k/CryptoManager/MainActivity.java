@@ -135,8 +135,9 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     }
 
     //Internet Connection!
-    public static boolean isConnectedToTheInternet(){
-        ConnectivityManager cm =  (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public boolean isConnectedToTheInternet(){
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;

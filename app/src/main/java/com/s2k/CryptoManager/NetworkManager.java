@@ -33,9 +33,14 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     //Page one Activities!
 
+
+
     //Crypto coins' information
     public void getCryptoDataGroupInformation(int groupNumber){
-        String url = buildURL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest");
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("start", String.valueOf(groupNumber*10 - 9));
+        parameters.put("limit", "10");
+        String url = buildURL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", parameters);
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
@@ -94,8 +99,9 @@ public class NetworkManager implements Callable<List<CryptoData>> {
         }
 
 
+        HashMap<String, String> parameters = new HashMap<>();
 
-        String url = buildURL("https://rest.coinapi.io/v1/ohlcv/".concat(symbol).concat("/USD/history?".concat(miniUrl)));
+        String url = buildURL("https://rest.coinapi.io/v1/ohlcv/".concat(symbol).concat("/USD/history?".concat(miniUrl)), parameters);
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
