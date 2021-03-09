@@ -5,12 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,16 +18,13 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements CryptoListAdapter.OnItemClickListener {
+    public static final String TAG = MainActivity.class.getName();
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
     private Handler mHandler;
@@ -55,16 +48,22 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             public void handleMessage(@NonNull Message msg) {
                 switch (msg.what) {
                     case DB_CRYPTO_LOAD:
+                        Log.d(TAG, "Message received: DB_CRYPTO_LOAD");
                         break;
                     case DB_CRYPTO_WRITE:
+                        Log.d(TAG, "Message received: DB_CRYPTO_WRITE");
                         break;
                     case DB_OHLC_LOAD:
+                        Log.d(TAG, "Message received: DB_OHLC_LOAD");
                         break;
                     case DB_OHLC_WRITE:
+                        Log.d(TAG, "Message received: DB_OHLC_WRITE");
                         break;
                     case NET_CRYPTO_LOAD:
+                        Log.d(TAG, "Message received: NET_CRYPTO_LOAD");
                         break;
                     case NET_OHLC_LOAD:
+                        Log.d(TAG, "Message received: NET_OHLC_LOAD");
                         break;
                 }
             }
