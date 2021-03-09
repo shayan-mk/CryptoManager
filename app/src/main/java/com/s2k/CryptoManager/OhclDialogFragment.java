@@ -29,10 +29,12 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 public class OhclDialogFragment extends AppCompatDialogFragment {
     private List<CandleEntry> oneMonthList;
     private List<CandleEntry> oneWeekList;
+    private String symbol;
     private CandleDataSet set;
     private Boolean isOneWeekShowed;
 
-    public OhclDialogFragment(List<OHLC> data) {
+    public OhclDialogFragment(String symbol, List<OHLC> data) {
+        this.symbol = symbol;
         oneMonthList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             OHLC candle = data.get(i);
@@ -116,7 +118,8 @@ public class OhclDialogFragment extends AppCompatDialogFragment {
             chart.invalidate();
         });
 
-        TextView symbol = (TextView) view.findViewById(R.id.ohclCryptoSymbol);
+        TextView symbolTextView = (TextView) view.findViewById(R.id.ohclCryptoSymbol);
+        symbolTextView.setText(symbol);
 
         builder.setView(view);
         builder.setNegativeButton("Hide", new DialogInterface.OnClickListener() {
