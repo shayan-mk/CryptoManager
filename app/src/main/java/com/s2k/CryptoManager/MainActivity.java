@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import android.view.Menu;
@@ -29,6 +31,14 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements CryptoListAdapter.OnItemClickListener {
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
+    private Handler mHandler;
+
+    public static final int DB_CRYPTO_LOAD = 1;
+    public static final int DB_OHLC_LOAD = 2;
+    public static final int DB_CRYPTO_WRITE = 3;
+    public static final int DB_OHLC_WRITE = 4;
+    public static final int NET_CRYPTO_LOAD = 5;
+    public static final int NET_OHLC_LOAD = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         isRefreshing = false;
         isLoadingMore = false;
+        Handler mainHandler = new Handler(Looper.getMainLooper());
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
