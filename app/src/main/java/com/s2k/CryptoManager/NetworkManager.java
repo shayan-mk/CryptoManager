@@ -3,6 +3,8 @@ package com.s2k.CryptoManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.github.mikephil.charting.components.Description;
@@ -31,7 +33,7 @@ public class NetworkManager {
 
 
     //Crypto coins' information
-    public void getCryptoDataGroupInformation(int groupNumber){
+    public void getCryptoDataGroupInformation(int groupNumber, Handler handler){
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("start", String.valueOf(groupNumber*10 - 9));
         parameters.put("limit", "10");
@@ -58,7 +60,11 @@ public class NetworkManager {
                     Gson gson = new Gson();
                     CryptoData[] cryptoData = gson.fromJson(response.body().string(), CryptoData[].class);
                     List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
-                    //TODO: pass it to the handler
+                    Message message = new Message();
+                    message.what = MainActivity.DB_OHLC_LOAD;
+                    message.arg1 = 1;
+                    message.obj = cryptoData;
+                    handler.sendMessage(message);
                 }
             }
         });
