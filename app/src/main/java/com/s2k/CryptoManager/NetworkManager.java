@@ -48,11 +48,11 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     //Crypto coins' information
     public void getCryptoDataGroupInformation(int groupNumber){
-        String url = buildURL("");
+        String url = buildURL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest");
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
-                .addHeader("X-CoinAPI-Key", "YOUR_COIN_IO_API_KEY")
+                .addHeader("X-CMC_PRO_API_KEY", apiKey)
                 .build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
