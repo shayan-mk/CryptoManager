@@ -10,11 +10,13 @@ public class CryptoData {
     public String name;
     public quote quote;
 
-    public class quote{
-        public quote() {
+    public static class quote{
+        public USD usd;
+        public quote(USD usd) {
+            this.usd = usd;
         }
 
-        public class USD{
+        public static class USD{
             public USD(float price, float percent_change_1h, float percent_change_24h, float percent_change_7d) {
                 this.price = price;
                 this.percent_change_1h = percent_change_1h;
@@ -37,6 +39,40 @@ public class CryptoData {
         this.name = name;
         this.quote = quote;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public float getPrice(){
+        return quote.usd.price;
+    }
+
+    public float getPercentChange1h(){
+        return quote.usd.percent_change_1h;
+    }
+
+    public float getPercentChange24h(){
+        return quote.usd.percent_change_24h;
+    }
+
+    public float getPercentChange7d(){
+        return quote.usd.percent_change_7d;
+    }
+
+
 
 
 
