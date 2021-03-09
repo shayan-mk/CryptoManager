@@ -56,6 +56,18 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         return cryptoDataList.size();
     }
 
+    public void loadMoreCryptoData(List<CryptoData> newData) {
+        int size = getItemCount();
+        cryptoDataList.addAll(newData);
+        notifyItemRangeInserted(size, newData.size());
+    }
+
+    public void reloadCryptoData(List<CryptoData> newData) {
+        cryptoDataList.clear();
+        cryptoDataList.addAll(newData);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
