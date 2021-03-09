@@ -81,7 +81,7 @@ public class NetworkManager {
     }
 
 
-    public void getCandles(String symbol,Range range) {
+    public void getCandles(String symbol,Range range, Handler handler) {
 
         String miniUrl;
         final String description;
@@ -127,19 +127,22 @@ public class NetworkManager {
                     if (!response.isSuccessful()) {
                         throw new IOException("Unexpected code " + response);
                     } else {
-                    extractCandlesFromResponse(response.body().string(), description);
+                    extractCandlesFromResponse(response.body().string(), handler);
                 }
             }
         });
 
     }
 
-    //TODO: pass candles to the handler
-    private void extractCandlesFromResponse(String body, String description){
+    private void extractCandlesFromResponse(String body, Handler handler){
         Gson gson = new Gson();
         OHLC[] ohlcs = gson.fromJson(body, OHLC[].class);
         List<OHLC> OHLCList = Arrays.asList(ohlcs);
-        //TODO: pass it to the handler, description
+        Message message = new Message();
+        message.what = MainActivity.NET_OHLC_LOAD;
+        message.arg1 = 1;
+        message.obj = OHLCList;
+        handler.sendMessage(message);
 
     }
 
