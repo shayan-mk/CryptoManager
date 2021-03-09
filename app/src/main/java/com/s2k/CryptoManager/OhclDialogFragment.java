@@ -76,13 +76,7 @@ public class OhclDialogFragment extends AppCompatDialogFragment {
         xAxis.setGranularity(1f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
 
-        // one week mock data
-        ArrayList<CandleEntry> yValsCandleStick= new ArrayList<CandleEntry>();
-        yValsCandleStick.add(new CandleEntry(0, 225.0f, 219.84f, 224.94f, 221.07f));
-        yValsCandleStick.add(new CandleEntry(1, 228.35f, 222.57f, 223.52f, 226.41f));
-        yValsCandleStick.add(new CandleEntry(2, 226.84f,  222.52f, 225.75f, 223.84f));
-        yValsCandleStick.add(new CandleEntry(3, 222.95f, 217.27f, 222.15f, 217.88f));
-        set = new CandleDataSet(yValsCandleStick, "DataSet");
+        set = new CandleDataSet(oneWeekList, "DataSet");
 
         set.setColor(Color.rgb(80, 80, 80));
         set.setShadowColor(getResources().getColor(R.color.black));
@@ -105,18 +99,7 @@ public class OhclDialogFragment extends AppCompatDialogFragment {
             if (!isOneWeekShowed) return;
             isOneWeekShowed = false;
 
-            // one month mock data
-            ArrayList<CandleEntry> array = new ArrayList<CandleEntry>();
-            array.add(new CandleEntry(0, 225.0f, 219.84f, 224.94f, 221.07f));
-            array.add(new CandleEntry(1, 228.35f, 222.57f, 223.52f, 226.41f));
-            array.add(new CandleEntry(2, 226.84f,  222.52f, 225.75f, 223.84f));
-            array.add(new CandleEntry(3, 222.95f, 217.27f, 222.15f, 217.88f));
-            array.add(new CandleEntry(4, 225.0f, 219.84f, 224.94f, 221.07f));
-            array.add(new CandleEntry(5, 228.35f, 222.57f, 223.52f, 226.41f));
-            array.add(new CandleEntry(6, 226.84f,  222.52f, 225.75f, 223.84f));
-            array.add(new CandleEntry(7, 222.95f, 217.27f, 222.15f, 217.88f));
-
-            set.setValues(array);
+            set.setValues(oneMonthList);
             data.notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.invalidate();
@@ -127,14 +110,7 @@ public class OhclDialogFragment extends AppCompatDialogFragment {
             if (isOneWeekShowed) return;
             isOneWeekShowed = true;
 
-            // one week mock data
-            ArrayList<CandleEntry> array = new ArrayList<CandleEntry>();
-            array.add(new CandleEntry(0, 225.0f, 219.84f, 224.94f, 221.07f));
-            array.add(new CandleEntry(1, 228.35f, 222.57f, 223.52f, 226.41f));
-            array.add(new CandleEntry(2, 226.84f,  222.52f, 225.75f, 223.84f));
-            array.add(new CandleEntry(3, 222.95f, 217.27f, 222.15f, 217.88f));
-
-            set.setValues(array);
+            set.setValues(oneWeekList);
             data.notifyDataChanged();
             chart.notifyDataSetChanged();
             chart.invalidate();
