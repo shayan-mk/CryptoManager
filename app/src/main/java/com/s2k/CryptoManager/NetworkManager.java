@@ -118,6 +118,10 @@ public class NetworkManager {
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                Message message = new Message();
+                message.what = MainActivity.NET_OHLC_LOAD;
+                message.arg1 = 0;
+                handler.sendMessage(message);
                 Log.v("TAG", e.getMessage());
             }
 
