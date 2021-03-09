@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -16,9 +18,9 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
 
     private Context context;
     private OnItemClickListener listener;
-    public CryptoListAdapter(Context context, List<CryptoData> cryptoDataList, OnItemClickListener listener) {
+    public CryptoListAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
-        this.cryptoDataList = cryptoDataList;
+        this.cryptoDataList = new ArrayList<>();
         this.listener = listener;
     }
 
