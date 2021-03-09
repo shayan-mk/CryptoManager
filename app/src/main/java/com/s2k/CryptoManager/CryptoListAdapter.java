@@ -43,10 +43,10 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
                 .load(data.logo)
                 .into(holder.icon);
         holder.name.setText(data.symbol + " | " + data.name);
-        holder.oneHourChange.setText("1h: " + data.oneHourChange + "%");
-        holder.oneDayChange.setText("1d: " + data.oneDayChange + "%");
-        holder.oneWeekChange.setText("7d: " + data.oneWeekChange + "%");
-        holder.price.setText(data.price + "$");
+        holder.oneHourChange.setText("1h: " + ((int)data.getPercentChange1h()) + "%");
+        holder.oneDayChange.setText("1d: " + ((int)data.getPercentChange24h()) + "%");
+        holder.oneWeekChange.setText("7d: " + ((int)data.getPercentChange7d()) + "%");
+        holder.price.setText(data.getPrice() + "$");
 
         holder.itemView.setOnClickListener(view -> listener.onItemClick(data.symbol));
     }
