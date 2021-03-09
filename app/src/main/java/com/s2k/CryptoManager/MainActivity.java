@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     public static final String TAG = MainActivity.class.getName();
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
+    private Boolean isLoadingOhcl;
+    private String loadingOhclSymbol;
     private Handler mHandler;
 
     public static final int DB_CRYPTO_LOAD = 1;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         isRefreshing = false;
         isLoadingMore = false;
+        isLoadingOhcl = false;
+        loadingOhclSymbol = "";
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
@@ -146,6 +150,11 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         break;
                     case DB_OHLC_LOAD:
                         Log.d(TAG, "Message received: DB_OHLC_LOAD");
+                        List<OHLC> ohclList = (List<OHLC>) msg.obj;
+                        DialogFragment dialogFragment = new OhclDialogFragment(loadingOhclSymbol, ohclList);
+                        dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+                        isLoadingOhcl = false;
+                        loadingOhclSymbol = "";
                         break;
                     case DB_OHLC_WRITE:
                         Log.d(TAG, "Message received: DB_OHLC_WRITE");
@@ -161,6 +170,11 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         break;
                     case NET_OHLC_LOAD:
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
+                        ohclList = (List<OHLC>) msg.obj;
+                        dialogFragment = new OhclDialogFragment(loadingOhclSymbol, ohclList);
+                        dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+                        isLoadingOhcl = false;
+                        loadingOhclSymbol = "";
                         break;
                 }
             }
@@ -169,8 +183,10 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
     @Override
     public void onItemClick(String symbol) {
-        DialogFragment dialogFragment = new OhclDialogFragment();
-        dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+        if (isLoadingOhcl) return;
+        loadingOhclSymbol = symbol;
+        isLoadingOhcl = true;
+        //TODO
     }
 
     //Internet Connection!
