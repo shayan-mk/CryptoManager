@@ -43,36 +43,10 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         isRefreshing = false;
         isLoadingMore = false;
-        mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                switch (msg.what) {
-                    case DB_CRYPTO_LOAD:
-                        Log.d(TAG, "Message received: DB_CRYPTO_LOAD");
-                        break;
-                    case DB_CRYPTO_WRITE:
-                        Log.d(TAG, "Message received: DB_CRYPTO_WRITE");
-                        break;
-                    case DB_OHLC_LOAD:
-                        Log.d(TAG, "Message received: DB_OHLC_LOAD");
-                        break;
-                    case DB_OHLC_WRITE:
-                        Log.d(TAG, "Message received: DB_OHLC_WRITE");
-                        break;
-                    case NET_CRYPTO_LOAD:
-                        Log.d(TAG, "Message received: NET_CRYPTO_LOAD");
-                        break;
-                    case NET_OHLC_LOAD:
-                        Log.d(TAG, "Message received: NET_OHLC_LOAD");
-                        break;
-                }
-            }
-        };
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
-        List<CryptoData> cryptoData = CryptoData.createCryptoDataList();
-        CryptoListAdapter adapter = new CryptoListAdapter(this, cryptoData, this);
+        CryptoListAdapter adapter = new CryptoListAdapter(this, this);
 
         rvCryptos.setAdapter(adapter);
         rvCryptos.setLayoutManager(new LinearLayoutManager(this));
@@ -157,6 +131,40 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 }).start();
             }
         });
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case DB_CRYPTO_LOAD:
+                        Log.d(TAG, "Message received: DB_CRYPTO_LOAD");
+                        List<CryptoData> cryptoDataList = (List<CryptoData>) msg.obj;
+                        adapter.loadMoreCryptoData(cryptoDataList);
+                        break;
+                    case DB_CRYPTO_WRITE:
+                        Log.d(TAG, "Message received: DB_CRYPTO_WRITE");
+                        break;
+                    case DB_OHLC_LOAD:
+                        Log.d(TAG, "Message received: DB_OHLC_LOAD");
+                        break;
+                    case DB_OHLC_WRITE:
+                        Log.d(TAG, "Message received: DB_OHLC_WRITE");
+                        break;
+                    case NET_CRYPTO_LOAD:
+                        Log.d(TAG, "Message received: NET_CRYPTO_LOAD");
+                        cryptoDataList = (List<CryptoData>) msg.obj;
+                        if (isRefreshing) {
+                            adapter.reloadCryptoData(cryptoDataList);
+                        } else {
+                            adapter.loadMoreCryptoData(cryptoDataList);
+                        }
+                        break;
+                    case NET_OHLC_LOAD:
+                        Log.d(TAG, "Message received: NET_OHLC_LOAD");
+                        break;
+                }
+            }
+        };
     }
 
     @Override
