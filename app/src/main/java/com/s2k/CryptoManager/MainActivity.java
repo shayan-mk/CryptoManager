@@ -22,6 +22,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity implements CryptoListAdapter.OnItemClickListener {
     public static final String TAG = MainActivity.class.getName();
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     private Boolean isLoadingOhlc;
     private String loadingOhlcSymbol;
     private Handler handler;
+    private ExecutorService threadPool;
 
     public static final int DB_CRYPTO_LOAD = 1;
     public static final int DB_OHLC_LOAD = 2;
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         isLoadingMore = false;
         isLoadingOhlc = false;
         loadingOhlcSymbol = "";
+        threadPool = Executors.newFixedThreadPool(5);
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
