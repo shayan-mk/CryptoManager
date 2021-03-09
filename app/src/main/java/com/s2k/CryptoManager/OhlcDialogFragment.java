@@ -26,14 +26,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class OhclDialogFragment extends AppCompatDialogFragment {
+public class OhlcDialogFragment extends AppCompatDialogFragment {
     private List<CandleEntry> oneMonthList;
     private List<CandleEntry> oneWeekList;
     private String symbol;
     private CandleDataSet set;
     private Boolean isOneWeekShowed;
 
-    public OhclDialogFragment(String symbol, List<OHLC> data) {
+    public OhlcDialogFragment(String symbol, List<OHLC> data) {
         this.symbol = symbol;
         oneMonthList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
@@ -54,10 +54,10 @@ public class OhclDialogFragment extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.fragment_ohcl, null);
+        View view = inflater.inflate(R.layout.fragment_ohlc, null);
 
         // setting chart parameters
-        CandleStickChart chart = (CandleStickChart) view.findViewById(R.id.ohclChart);
+        CandleStickChart chart = (CandleStickChart) view.findViewById(R.id.ohlcChart);
         chart.setLogEnabled(true);
         chart.setHighlightPerDragEnabled(true);
         chart.setDrawBorders(true);
@@ -118,7 +118,7 @@ public class OhclDialogFragment extends AppCompatDialogFragment {
             chart.invalidate();
         });
 
-        TextView symbolTextView = (TextView) view.findViewById(R.id.ohclCryptoSymbol);
+        TextView symbolTextView = (TextView) view.findViewById(R.id.ohlcCryptoSymbol);
         symbolTextView.setText(symbol);
 
         builder.setView(view);

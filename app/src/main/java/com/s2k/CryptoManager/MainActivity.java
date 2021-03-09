@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     public static final String TAG = MainActivity.class.getName();
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
-    private Boolean isLoadingOhcl;
-    private String loadingOhclSymbol;
+    private Boolean isLoadingOhlc;
+    private String loadingOhlcSymbol;
     private Handler mHandler;
 
     public static final int DB_CRYPTO_LOAD = 1;
@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         isRefreshing = false;
         isLoadingMore = false;
-        isLoadingOhcl = false;
-        loadingOhclSymbol = "";
+        isLoadingOhlc = false;
+        loadingOhlcSymbol = "";
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
@@ -151,10 +151,10 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case DB_OHLC_LOAD:
                         Log.d(TAG, "Message received: DB_OHLC_LOAD");
                         List<OHLC> ohclList = (List<OHLC>) msg.obj;
-                        DialogFragment dialogFragment = new OhclDialogFragment(loadingOhclSymbol, ohclList);
+                        DialogFragment dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
-                        isLoadingOhcl = false;
-                        loadingOhclSymbol = "";
+                        isLoadingOhlc = false;
+                        loadingOhlcSymbol = "";
                         break;
                     case DB_OHLC_WRITE:
                         Log.d(TAG, "Message received: DB_OHLC_WRITE");
@@ -171,10 +171,10 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case NET_OHLC_LOAD:
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
                         ohclList = (List<OHLC>) msg.obj;
-                        dialogFragment = new OhclDialogFragment(loadingOhclSymbol, ohclList);
+                        dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
-                        isLoadingOhcl = false;
-                        loadingOhclSymbol = "";
+                        isLoadingOhlc = false;
+                        loadingOhlcSymbol = "";
                         break;
                 }
             }
@@ -183,9 +183,9 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
     @Override
     public void onItemClick(String symbol) {
-        if (isLoadingOhcl) return;
-        loadingOhclSymbol = symbol;
-        isLoadingOhcl = true;
+        if (isLoadingOhlc) return;
+        loadingOhlcSymbol = symbol;
+        isLoadingOhlc = true;
         //TODO
     }
 
