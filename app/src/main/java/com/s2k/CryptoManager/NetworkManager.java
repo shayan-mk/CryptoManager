@@ -34,8 +34,8 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     //Internet Connection!
     //TODO:
-    /*public static boolean isConnectedToTheInternet(){
-        ConnectivityManager cm =  (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isConnectedToTheInternet(){
+        ConnectivityManager cm =  (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
@@ -43,7 +43,7 @@ public class NetworkManager implements Callable<List<CryptoData>> {
             return false;
         }
 
-    }*/
+    }
 
 
     //Crypto coins' information

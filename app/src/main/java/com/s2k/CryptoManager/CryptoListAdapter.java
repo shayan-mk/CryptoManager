@@ -40,7 +40,7 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         CryptoData data = cryptoDataList.get(position);
 
         GlideApp.with(context)
-                .load(data.iconUrl)
+                .load(data.logo)
                 .into(holder.icon);
         holder.name.setText(data.symbol + " | " + data.name);
         holder.oneHourChange.setText("1h: " + data.oneHourChange + "%");
