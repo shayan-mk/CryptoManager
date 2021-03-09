@@ -18,14 +18,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 class DatabaseUtilities {
-    private static final String DATABASE_DIR = "/";
+    private static final String DATABASE_PATH = "/";
+    private static Gson gson = null;
 
-    private static File getFile(String fileName) {
-        File file = new File(DATABASE_DIR + fileName);
+    private static File getFile() {
+        File file = new File(DATABASE_PATH);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {
@@ -38,8 +38,8 @@ class DatabaseUtilities {
         return file;
     }
 
-    static Scanner getScanner(String fileName) {
-        File file = getFile(fileName);
+    static Scanner getScanner() {
+        File file = getFile();
         try {
             return new Scanner(file);
         } catch (IOException e) {
@@ -49,8 +49,8 @@ class DatabaseUtilities {
     }
 
 
-    static PrintWriter getPrintWriter(String fileName, boolean append) {
-        File file = getFile(fileName);
+    static PrintWriter getPrintWriter (boolean append) {
+        File file = getFile();
         try {
             FileWriter fileWriter = new FileWriter(file, append);
             return new PrintWriter(fileWriter);
@@ -61,9 +61,13 @@ class DatabaseUtilities {
     }
 
     static Gson getGson() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(CryptoData.class, new Adapter<CryptoData>());
-        return builder.create();
+        if (gson == null) {
+            GsonBuilder builder = new GsonBuilder();
+            builder.registerTypeAdapter(CryptoData.class, new Adapter<CryptoData>());
+            gson = builder.create();
+        }
+
+        return gson;
     }
 
     private static class Adapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {

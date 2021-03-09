@@ -1,5 +1,7 @@
 package com.s2k.CryptoManager.database;
 
+import android.os.Handler;
+
 import com.google.gson.Gson;
 import com.s2k.CryptoManager.CryptoData;
 
@@ -10,43 +12,31 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
-public class DatabaseManager implements Callable<List<CryptoData>> {
-    private static final String FILE_NAME = "";
-    private Gson gson;
+public class DatabaseManager implements Runnable {
+    private static DatabaseManager instance = null;
 
-    public List<CryptoData> load(int start, int count) {
-        Scanner scanner = DatabaseUtilities.getScanner(FILE_NAME);
-        List<CryptoData> cryptoDataList = new ArrayList<>();
-        for (int i = 0; i < start; i++) {
-            if (!scanner.hasNextLine()) break;
 
-            scanner.nextLine();
-        }
-        for (int i = 0; i < count; i++) {
-            if (!scanner.hasNextLine()) break;
-
-            String gsonString = scanner.nextLine();
-            cryptoDataList.add(gson.fromJson(gsonString, CryptoData.class));
-        }
-
-        scanner.close();
-        return cryptoDataList;
+    private DatabaseManager() {
     }
 
-    public synchronized void update(List<CryptoData> cryptoDataList, boolean append) {
-        PrintWriter printWriter = DatabaseUtilities.getPrintWriter(FILE_NAME, append);
-
-        for (CryptoData cryptoData : cryptoDataList) {
-            printWriter.println(gson.toJson(cryptoData, CryptoData.class));
+    public static DatabaseManager getInstance() {
+        if (instance == null) {
+            instance = new DatabaseManager();
         }
-        printWriter.flush();
-        printWriter.close();
+        return instance;
+    }
+
+    public void load(int start, int count, Handler handler) {
+        handler.post(new DatabaseCryptoLoader(start, count, handler));
+    }
+
+    public synchronized void update(List<CryptoData> cryptoDataList, boolean append, Handler handler) {
+        handler.post(new DatabaseCryptoWriter(cryptoDataList, append, handler));
     }
 
     @Override
-    public List<CryptoData> call() throws Exception {
-        this.gson = DatabaseUtilities.getGson();
+    public void run() {
 
-        return null;
+
     }
 }
