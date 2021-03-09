@@ -1,31 +1,18 @@
 package com.s2k.CryptoManager.database;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.s2k.CryptoManager.CryptoData;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.util.Scanner;
 
 class DatabaseUtilities {
-    private static final String DATABASE_PATH = "/";
-    private static Gson gson = null;
+    private static final String DATABASE_DIR = "/";
 
-    private static File getFile() {
-        File file = new File(DATABASE_PATH);
+    private static File getFile(String filename) {
+        File file = new File(DATABASE_DIR + filename);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {
@@ -38,8 +25,8 @@ class DatabaseUtilities {
         return file;
     }
 
-    static Scanner getScanner() {
-        File file = getFile();
+    static Scanner getScanner(String filename) {
+        File file = getFile(filename);
         try {
             return new Scanner(file);
         } catch (IOException e) {
@@ -49,8 +36,8 @@ class DatabaseUtilities {
     }
 
 
-    static PrintWriter getPrintWriter (boolean append) {
-        File file = getFile();
+    static PrintWriter getPrintWriter (boolean append, String filename) {
+        File file = getFile(filename);
         try {
             FileWriter fileWriter = new FileWriter(file, append);
             return new PrintWriter(fileWriter);
@@ -61,44 +48,41 @@ class DatabaseUtilities {
     }
 
     static Gson getGson() {
-        if (gson == null) {
-            GsonBuilder builder = new GsonBuilder();
-            builder.registerTypeAdapter(CryptoData.class, new Adapter<CryptoData>());
-            gson = builder.create();
-        }
-
-        return gson;
+//        GsonBuilder builder = new GsonBuilder();
+//        builder.registerTypeAdapter(CryptoData.class, new Adapter<CryptoData>());
+//        gson = builder.create();
+        return new Gson();
     }
 
-    private static class Adapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
-        private static final String CLASSNAME = "CLASSNAME";
-        private static final String INSTANCE = "INSTANCE";
-
-        @Override
-        public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject retValue = new JsonObject();
-            String className = src.getClass().getName();
-            retValue.addProperty(CLASSNAME, className);
-            JsonElement elem = context.serialize(src);
-            retValue.add(INSTANCE, elem);
-            return retValue;
-        }
-
-        @Override
-        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
-            JsonObject jsonObject = json.getAsJsonObject();
-            JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
-            String className = prim.getAsString();
-
-            Class<?> classType;
-            try {
-                classType = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                throw new JsonParseException(e.getMessage());
-            }
-            return context.deserialize(jsonObject.get(INSTANCE), classType);
-        }
-    }
+//    private static class Adapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
+//        private static final String CLASSNAME = "CLASSNAME";
+//        private static final String INSTANCE = "INSTANCE";
+//
+//        @Override
+//        public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
+//            JsonObject retValue = new JsonObject();
+//            String className = src.getClass().getName();
+//            retValue.addProperty(CLASSNAME, className);
+//            JsonElement elem = context.serialize(src);
+//            retValue.add(INSTANCE, elem);
+//            return retValue;
+//        }
+//
+//        @Override
+//        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+//                throws JsonParseException {
+//            JsonObject jsonObject = json.getAsJsonObject();
+//            JsonPrimitive prim = (JsonPrimitive) jsonObject.get(CLASSNAME);
+//            String className = prim.getAsString();
+//
+//            Class<?> classType;
+//            try {
+//                classType = Class.forName(className);
+//            } catch (ClassNotFoundException e) {
+//                e.printStackTrace();
+//                throw new JsonParseException(e.getMessage());
+//            }
+//            return context.deserialize(jsonObject.get(INSTANCE), classType);
+//        }
+//    }
 }
