@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -47,7 +50,25 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         isRefreshing = false;
         isLoadingMore = false;
-        Handler mainHandler = new Handler(Looper.getMainLooper());
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                switch (msg.what) {
+                    case DB_CRYPTO_LOAD:
+                        break;
+                    case DB_CRYPTO_WRITE:
+                        break;
+                    case DB_OHLC_LOAD:
+                        break;
+                    case DB_OHLC_WRITE:
+                        break;
+                    case NET_CRYPTO_LOAD:
+                        break;
+                    case NET_OHLC_LOAD:
+                        break;
+                }
+            }
+        };
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
