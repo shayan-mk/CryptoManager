@@ -33,7 +33,7 @@ public class NetworkManager {
 
 
     //Crypto coins' information
-    public void getCryptoDataGroupInformation(int groupNumber, Handler handler){
+    public void getCryptoDataList(int groupNumber, Handler handler){
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("start", String.valueOf(groupNumber*10 - 9));
         parameters.put("limit", "10");
@@ -55,6 +55,10 @@ public class NetworkManager {
             public void onResponse(Call call, final Response response) throws IOException {
 
                 if (!response.isSuccessful()) {
+                    Message message = new Message();
+                    message.what = MainActivity.DB_OHLC_LOAD;
+                    message.arg1 = 0;
+                    handler.sendMessage(message);
                     throw new IOException("Unexpected code " + response);
                 } else {
                     Gson gson = new Gson();
@@ -63,7 +67,7 @@ public class NetworkManager {
                     Message message = new Message();
                     message.what = MainActivity.DB_OHLC_LOAD;
                     message.arg1 = 1;
-                    message.obj = cryptoData;
+                    message.obj = cryptoDataList;
                     handler.sendMessage(message);
                 }
             }
@@ -76,9 +80,6 @@ public class NetworkManager {
         oneMonth,
     }
 
-    // برای دریافت کندل های روزانه به مدت یک هفته پارامتر دوم را "هفته ای" بدهید و
-    // برای دریافت کندل های روزانه به مدت یک ماه پارامتر دوم را "یک ماه" بدهید
-    // پارامتر اول هم نماد سکه مورد نظر خواهد بود
 
     public void getCandles(String symbol,Range range) {
 
