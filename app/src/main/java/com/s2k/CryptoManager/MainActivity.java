@@ -1,5 +1,8 @@
 package com.s2k.CryptoManager;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -129,5 +132,17 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     public void onItemClick(String symbol) {
         DialogFragment dialogFragment = new OhclDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+    }
+
+    //Internet Connection!
+    public static boolean isConnectedToTheInternet(){
+        ConnectivityManager cm =  (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }else {
+            return false;
+        }
+
     }
 }

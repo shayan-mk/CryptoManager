@@ -9,6 +9,7 @@ import com.github.mikephil.charting.components.Description;
 import com.s2k.CryptoManager.CryptoData;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -32,28 +33,13 @@ public class NetworkManager implements Callable<List<CryptoData>> {
 
     //Page one Activities!
 
-    //Internet Connection!
-    //TODO:
-    public static boolean isConnectedToTheInternet(){
-        ConnectivityManager cm =  (ConnectivityManager) MainActivity.this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }else {
-            return false;
-        }
-
-    }
-
-
     //Crypto coins' information
     public void getCryptoDataGroupInformation(int groupNumber){
         String url = buildURL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest");
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
-                .addHeader("X-CMC_PRO_API_KEY", apiKey)
-                .build();
+                .addHeader("X-CMC_PRO_API_KEY", apiKey).build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
 
@@ -141,13 +127,15 @@ public class NetworkManager implements Callable<List<CryptoData>> {
     private void extractCandlesFromResponse(String body, String description){
     }
 
-    private String buildURL(String string){
+    private String buildURL(String string, HashMap<String, String> queryParameters){
         HttpUrl.Builder urlBuilder = HttpUrl.parse(string)
                 .newBuilder();
 
-        String url = urlBuilder.build().toString();
+        for (String param : queryParameters.keySet()) {
+            urlBuilder.addQueryParameter(param, queryParameters.get(param));
+        }
 
-        return url;
+        return urlBuilder.build().toString();
     }
 
 
