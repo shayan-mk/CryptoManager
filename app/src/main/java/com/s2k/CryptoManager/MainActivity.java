@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     public static final int NET_CRYPTO_LOAD = 5;
     public static final int NET_OHLC_LOAD = 6;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
