@@ -22,6 +22,8 @@ import okhttp3.Response;
 
 public class NetworkManager implements Callable<List<CryptoData>> {
 
+    private static String apiKey = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
+
     @Override
     public List<CryptoData> call() throws Exception {
 
