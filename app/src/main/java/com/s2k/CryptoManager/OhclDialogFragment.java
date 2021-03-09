@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,8 +27,23 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class OhclDialogFragment extends AppCompatDialogFragment {
+    private List<CandleEntry> oneMonthList;
+    private List<CandleEntry> oneWeekList;
     private CandleDataSet set;
     private Boolean isOneWeekShowed;
+
+    public OhclDialogFragment(List<OHLC> data) {
+        oneMonthList = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            OHLC candle = data.get(i);
+            oneMonthList.add(new CandleEntry(i, candle.getPriceHigh(), candle.getPriceLow(), candle.getPriceOpen(), candle.getPriceClose())); // TODO
+        }
+        oneWeekList = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            oneWeekList.add(oneMonthList.get(i)); //TODO
+        }
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
