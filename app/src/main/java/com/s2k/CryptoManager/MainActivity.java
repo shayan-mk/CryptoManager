@@ -175,8 +175,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
-                        //threadPool.execute(DatabaseManager.getInstance().updateOHLC(loadingOhlcSymbol,
-                         //       ohclList, handler));
+                        threadPool.execute(DatabaseManager.getInstance().updateOHLC(loadingOhlcSymbol,
+                                ohclList, handler));
 
                         isLoadingOhlc = false;
                         loadingOhlcSymbol = "";
