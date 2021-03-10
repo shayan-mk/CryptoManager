@@ -3,13 +3,13 @@ package com.s2k.CryptoManager.database;
 import android.os.Handler;
 import android.os.Message;
 
-import com.google.gson.Gson;
 import com.s2k.CryptoManager.CryptoData;
 import com.s2k.CryptoManager.MainActivity;
 import com.s2k.CryptoManager.OHLC;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -51,18 +51,18 @@ public class DatabaseManager {
 
     public Runnable loadOHLC(String symbol, Handler handler) {
         return () -> {
-            OHLC ohlc = runLoadOHCL(symbol);
+            List<OHLC> ohlcList = runLoadOHCL(symbol);
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_LOAD;
             message.arg1 = 1;
-            message.obj = ohlc;
+            message.obj = ohlcList;
             handler.sendMessage(message);
         };
     }
 
-    public Runnable updateOHLC(String symbol, OHLC ohlc, Handler handler) {
+    public Runnable updateOHLC(String symbol, List<OHLC> ohlcList, Handler handler) {
         return () -> {
-            runUpdateOHLC(symbol, ohlc);
+            runUpdateOHLC(symbol, ohlcList);
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_UPDATE;
             message.arg1 = 1;
@@ -99,16 +99,16 @@ public class DatabaseManager {
         printWriter.close();
     }
 
-    private OHLC runLoadOHCL(String symbol) {
+    private List<OHLC> runLoadOHCL(String symbol) {
         Scanner scanner = DatabaseUtilities.getScanner(OHLC_DIR + symbol + ".txt");
-        OHLC ohlc = DatabaseUtilities.getGson().fromJson(scanner.nextLine(), OHLC.class);
+        List<OHLC> ohlcList = Arrays.asList(DatabaseUtilities.getGson().fromJson(scanner.nextLine(), OHLC[].class));
         scanner.close();
-        return ohlc;
+        return ohlcList;
     }
 
-    private synchronized void runUpdateOHLC(String symbol, OHLC ohlc) {
+    private synchronized void runUpdateOHLC(String symbol, List<OHLC> ohlcList) {
         PrintWriter printWriter = DatabaseUtilities.getPrintWriter(false, OHLC_DIR + symbol + ".txt");
-        printWriter.println(DatabaseUtilities.getGson().toJson(ohlc, OHLC.class));
+        printWriter.println(DatabaseUtilities.getGson().toJson(ohlcList.toArray(), OHLC[].class));
         printWriter.flush();
         printWriter.close();
     }
