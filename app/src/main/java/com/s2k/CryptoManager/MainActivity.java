@@ -20,6 +20,7 @@ import android.view.View;
 
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.s2k.CryptoManager.database.DatabaseManager;
 
@@ -130,6 +131,10 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         List<CryptoData> cryptoDataList = (List<CryptoData>) msg.obj;
                         adapter.loadMoreCryptoData(cryptoDataList);
                         isLoadingMore = false;
+
+                        if (cryptoDataList.size() == 0 && adapter.getItemCount() == 0) {
+                            Toast.makeText(MainActivity.this, "There is no data to show", Toast.LENGTH_SHORT).show();
+                        }
 
                         progressBar.setProgress(0);
                         progressBar.setVisibility(View.INVISIBLE);
