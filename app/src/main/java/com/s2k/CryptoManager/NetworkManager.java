@@ -27,10 +27,16 @@ import okhttp3.Response;
 
 
 public class NetworkManager {
+    private static NetworkManager instance = null;
 
     private static String apiKey = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
 
-
+    public static NetworkManager getInstance() {
+        if (instance == null) {
+            instance = new NetworkManager();
+        }
+        return instance;
+    }
 
     //Crypto coins' information
     public void getCryptoDataList(int groupNumber, Handler handler){
