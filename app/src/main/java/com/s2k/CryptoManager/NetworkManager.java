@@ -32,6 +32,7 @@ import okhttp3.Response;
 
 public class NetworkManager {
     private static NetworkManager instance = null;
+    private static final String TAG = "NetworkManager";
 
     private static String apiKey = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
 
@@ -54,7 +55,7 @@ public class NetworkManager {
                 .addHeader("X-CMC_PRO_API_KEY", apiKey).build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
-
+        Log.d(TAG, "request: " + request.toString());
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -66,20 +67,24 @@ public class NetworkManager {
 
                 if (!response.isSuccessful()) {
                     Message message = new Message();
-                    message.what = MainActivity.DB_OHLC_LOAD;
+                    message.what = MainActivity.NET_CRYPTO_LOAD;
                     message.arg1 = 0;
                     handler.sendMessage(message);
                     throw new IOException("Unexpected code " + response);
                 } else {
-                    JsonObject obj = JsonParser.parseString(response.body().string()).getAsJsonObject();
-                    String dataJson = obj.get("data").getAsString();
+                    String responseString = response.body().string();
+                    Log.d(TAG, "onResponse: " + responseString);
+                    JsonObject obj = JsonParser.parseString(responseString).getAsJsonObject();
+                    Log.d(TAG, "onResponse: " + obj.get("data").toString());
+                    Log.d(TAG, "onResponse: " + obj.toString());
+                    String dataJson = obj.get("data").toString();
                     Gson gson = new Gson();
                     CryptoData[] cryptoData = gson.fromJson(dataJson, CryptoData[].class);
-                    List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
+//                    List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
                     Message message = new Message();
-                    message.what = MainActivity.DB_OHLC_LOAD;
+                    message.what = MainActivity.NET_CRYPTO_LOAD;
                     message.arg1 = 1;
-                    message.obj = cryptoDataList;
+                    message.obj = cryptoData;
                     handler.sendMessage(message);
                 }
             }
@@ -153,24 +158,26 @@ public class NetworkManager {
     private void extractCandlesFromResponse(String body, Handler handler){
         Gson gson = new Gson();
         OHLC[] ohlcs = gson.fromJson(body, OHLC[].class);
-        List<OHLC> OHLCList = Arrays.asList(ohlcs);
+//        List<OHLC> OHLCList = Arrays.asList(ohlcs);
         Message message = new Message();
         message.what = MainActivity.NET_OHLC_LOAD;
         message.arg1 = 1;
-        message.obj = OHLCList;
+        message.obj = ohlcs;
         handler.sendMessage(message);
 
     }
 
     private String buildURL(String string, HashMap<String, String> queryParameters){
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(string)
-                .newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(string).newBuilder();
 
         for (String param : queryParameters.keySet()) {
             urlBuilder.addQueryParameter(param, queryParameters.get(param));
         }
+        String url = urlBuilder.build().toString();
+        Log.d(TAG, "buildURL: " + url);
 
-        return urlBuilder.build().toString();
+        return url;
+
     }
 
 

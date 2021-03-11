@@ -1,18 +1,33 @@
 package com.s2k.CryptoManager.database;
 
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import com.google.gson.Gson;
+import com.s2k.CryptoManager.R;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 class DatabaseUtilities {
-    private static final String DATABASE_DIR = "/";
-
+    private static final String DATABASE_DIR = "/src/main/res/database/";
+    private static final String TAG = "DatabaseUtilities";
+    
     private static File getFile(String filename) {
         File file = new File(DATABASE_DIR + filename);
+
+        Log.d(TAG, "getFile: " + file.getPath());
+        Log.d(TAG, "getFile: " + file.exists());
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             try {

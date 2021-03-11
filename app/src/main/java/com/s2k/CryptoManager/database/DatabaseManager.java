@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class DatabaseManager {
     private static DatabaseManager instance = null;
-    private static final String CRYPTO_FILE = "crypto_data";
+    private static final String CRYPTO_FILE = "crypto_data.txt";
     private static final String OHLC_DIR = "ohlc/";
 
     private DatabaseManager() {
@@ -34,7 +34,7 @@ public class DatabaseManager {
             Message message = new Message();
             message.what = MainActivity.DB_CRYPTO_LOAD;
             message.arg1 = 1;
-            message.obj = cryptoDataList;
+            message.obj = cryptoDataList.toArray();
             handler.sendMessage(message);
         };
     }
@@ -55,7 +55,7 @@ public class DatabaseManager {
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_LOAD;
             message.arg1 = 1;
-            message.obj = ohlcList;
+            message.obj = ohlcList.toArray();
             handler.sendMessage(message);
         };
     }
