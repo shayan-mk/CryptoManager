@@ -3,6 +3,8 @@ package com.s2k.CryptoManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+
 public class CryptoData {
     public String id;
     public String logo; //maybe need to change
@@ -11,9 +13,9 @@ public class CryptoData {
     public quote quote;
 
     public static class quote{
-        public USD usd;
-        public quote(USD usd) {
-            this.usd = usd;
+        public USD USD;
+        public quote(USD USD) {
+            this.USD = USD;
         }
 
         public static class USD{
@@ -29,6 +31,12 @@ public class CryptoData {
             public float percent_change_24h;
             public float percent_change_7d;
 
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return USD.price + " - " + USD.percent_change_1h + " - " + USD.percent_change_24h + " - " + USD.percent_change_7d;
         }
     }
 
@@ -57,24 +65,27 @@ public class CryptoData {
     }
 
     public float getPrice(){
-        return quote.usd.price;
+        return quote.USD.price;
     }
 
     public float getPercentChange1h(){
-        return quote.usd.percent_change_1h;
+        return quote.USD.percent_change_1h;
     }
 
     public float getPercentChange24h(){
-        return quote.usd.percent_change_24h;
+        return quote.USD.percent_change_24h;
     }
 
     public float getPercentChange7d(){
-        return quote.usd.percent_change_7d;
+        return quote.USD.percent_change_7d;
     }
 
 
-
-
+    @NonNull
+    @Override
+    public String toString() {
+        return id + " - " + symbol + " - " + name + " - " + quote.toString();
+    }
 
     // mock data
     public static List<CryptoData> createCryptoDataList() {

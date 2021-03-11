@@ -80,6 +80,7 @@ public class NetworkManager {
                     String dataJson = obj.get("data").toString();
                     Gson gson = new Gson();
                     CryptoData[] cryptoData = gson.fromJson(dataJson, CryptoData[].class);
+//                    Log.d(TAG, "OnResponse: cryptoData0 " + cryptoData[0]);
 //                    List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
                     Message message = new Message();
                     message.what = MainActivity.NET_CRYPTO_LOAD;
