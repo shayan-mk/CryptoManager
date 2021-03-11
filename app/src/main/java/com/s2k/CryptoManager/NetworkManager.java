@@ -169,6 +169,7 @@ public class NetworkManager {
 
 
     private String getCurrentDate() {
+        //TODO: implement
         return null;
     }
 
