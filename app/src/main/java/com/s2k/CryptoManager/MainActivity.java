@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.s2k.CryptoManager.database.DatabaseManager;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -51,12 +52,12 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         isRefreshing = false;
         isLoadingMore = false;
         isLoadingOhlc = false;
         loadingOhlcSymbol = "";
         threadPool = Executors.newFixedThreadPool(5);
+        DatabaseManager.initDatabase(getFilesDir());
 
         RecyclerView rvCryptos = (RecyclerView) findViewById(R.id.rvCryptos);
 
@@ -232,5 +233,9 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return (netInfo != null && netInfo.isConnectedOrConnecting());
 
+    }
+
+    public File getResourceDir() {
+        return getFilesDir();
     }
 }
