@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.github.mikephil.charting.components.Description;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.s2k.CryptoManager.CryptoData;
 
 import java.io.IOException;
@@ -69,8 +71,10 @@ public class NetworkManager {
                     handler.sendMessage(message);
                     throw new IOException("Unexpected code " + response);
                 } else {
+                    JsonObject obj = JsonParser.parseString(response.body().string()).getAsJsonObject();
+                    String dataJson = obj.get("data").getAsString();
                     Gson gson = new Gson();
-                    CryptoData[] cryptoData = gson.fromJson(response.body().string(), CryptoData[].class);
+                    CryptoData[] cryptoData = gson.fromJson(dataJson, CryptoData[].class);
                     List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
                     Message message = new Message();
                     message.what = MainActivity.DB_OHLC_LOAD;
