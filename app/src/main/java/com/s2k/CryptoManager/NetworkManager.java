@@ -25,7 +25,8 @@ public class NetworkManager {
     private static NetworkManager instance = null;
     private static final String TAG = "NetworkManager";
 
-    private static final String API_KEY = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
+    private static final String COIN_MARKET_API_KEY = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
+    private static final String COIN_IO_API_KEY ="ADA19C63-1822-48E2-AF02-ED8E661F02F5";
 
     private NetworkManager() {
     }
@@ -54,7 +55,7 @@ public class NetworkManager {
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
-                .addHeader("X-CMC_PRO_API_KEY", API_KEY).build();
+                .addHeader("X-CMC_PRO_API_KEY", COIN_MARKET_API_KEY).build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Log.d(TAG, "request: " + request.toString());
@@ -124,7 +125,7 @@ public class NetworkManager {
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
-                .addHeader("X-CoinAPI-Key", "YOUR_COIN_IO_API_KEY")
+                .addHeader("X-CoinAPI-Key", COIN_IO_API_KEY)
                 .build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
