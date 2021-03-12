@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         .loadCryptoList(1, handler));
             } else {
                 threadPool.execute(DatabaseManager.getInstance()
-                        .loadCryptoList(0, 10, handler));
+                        .loadCryptoList(0, handler));
             }
         });
 
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         .loadCryptoList(adapter.getItemCount() / 10 + 1, handler));
             } else {
                 threadPool.execute(DatabaseManager.getInstance()
-                        .loadCryptoList(adapter.getItemCount(), 10, handler));
+                        .loadCryptoList(adapter.getItemCount() / 10, handler));
             }
         });
 
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     .loadCryptoList(1, handler));
         } else {
             threadPool.execute(DatabaseManager.getInstance()
-                    .loadCryptoList(0, 10, handler));
+                    .loadCryptoList(0, handler));
         }
     }
 

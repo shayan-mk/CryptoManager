@@ -10,6 +10,7 @@ import com.s2k.CryptoManager.OHLC;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,9 +33,9 @@ public class DatabaseManager {
         return dbManager;
     }
 
-    public Runnable loadCryptoList(int start, int count, Handler handler) {
+    public Runnable loadCryptoList(int groupNumber, Handler handler) {
         return () -> {
-            CryptoData[] cryptoDataList = runLoadCrypto(start, count);
+            CryptoData[] cryptoDataList = runLoadCrypto(groupNumber);
             Message message = new Message();
             message.what = MainActivity.DB_CRYPTO_LOAD;
             message.arg1 = 1;
@@ -74,32 +75,33 @@ public class DatabaseManager {
         };
     }
 
-    private CryptoData[] runLoadCrypto(int start, int count) {
+    private CryptoData[] runLoadCrypto(int groupNumber) {
         Scanner scanner = dbUtility.getScanner(CRYPTO_FILE);
         Gson gson = new Gson();
-        CryptoData[] cryptoDataList = new CryptoData[count];
-        for (int i = 0; i < start; i++) {
-            if (!scanner.hasNextLine()) break;
+        CryptoData[] cryptoDataList;
 
+        for (int i = 0; i < groupNumber; i++) {
             scanner.nextLine();
         }
-        for (int i = 0; i < count; i++) {
-            if (!scanner.hasNextLine()) break;
 
-            String gsonString = scanner.nextLine();
-            cryptoDataList[i] = gson.fromJson(gsonString, CryptoData.class);
+        if (!scanner.hasNextLine()) {
+            cryptoDataList = new CryptoData[0];
+        } else {
+            cryptoDataList = gson.fromJson(scanner.nextLine(), CryptoData[].class);
         }
         scanner.close();
+
         return cryptoDataList;
     }
 
     private synchronized void runUpdateCrypto(CryptoData[] cryptoDataList, boolean append) {
         PrintWriter printWriter = dbUtility.getPrintWriter(append, CRYPTO_FILE);
         Gson gson = new Gson();
+        printWriter.println(gson.toJson(cryptoDataList, CryptoData[].class));
         for (CryptoData cryptoData : cryptoDataList) {
-            printWriter.println(gson.toJson(cryptoData, CryptoData.class));
             runUpdateOHLC(cryptoData.getSymbol(), MOCK_OHLC_LIST);
         }
+
         printWriter.flush();
         printWriter.close();
     }
