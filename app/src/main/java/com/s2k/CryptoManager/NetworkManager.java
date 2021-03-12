@@ -46,7 +46,7 @@ public class NetworkManager {
     }
 
     //Crypto coins' information
-    public void runLoadCrypto(int groupNumber, Handler handler) {
+    private void runLoadCrypto(int groupNumber, Handler handler) {
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put("start", String.valueOf(groupNumber * 10 - 9));
         parameters.put("limit", "10");
@@ -99,7 +99,7 @@ public class NetworkManager {
     }
 
 
-    public void runLoadOHLC(String symbol, Range range, Handler handler) {
+    private void runLoadOHLC(String symbol, Range range, Handler handler) {
 
         String miniUrl;
         switch (range) {
@@ -145,21 +145,16 @@ public class NetworkManager {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response);
                 } else {
-                    extractCandlesFromResponse(response.body().string(), handler);
+                    Gson gson = new Gson();
+                    OHLC[] ohlcList = gson.fromJson(response.body().string(), OHLC[].class);
+                    Message message = new Message();
+                    message.what = MainActivity.NET_OHLC_LOAD;
+                    message.arg1 = 1;
+                    message.obj = ohlcList;
+                    handler.sendMessage(message);
                 }
             }
         });
-
-    }
-
-    private void extractCandlesFromResponse(String body, Handler handler) {
-        Gson gson = new Gson();
-        OHLC[] ohlcList = gson.fromJson(body, OHLC[].class);
-        Message message = new Message();
-        message.what = MainActivity.NET_OHLC_LOAD;
-        message.arg1 = 1;
-        message.obj = ohlcList;
-        handler.sendMessage(message);
 
     }
 
