@@ -8,7 +8,7 @@ public class OHLC {
     private final float price_high;
     private final float price_low;
 
-    public OHLC( float price_open, float price_close, float price_high, float price_low) {
+    private OHLC( float price_open, float price_close, float price_high, float price_low) {
         this.price_open = price_open;
         this.price_close = price_close;
         this.price_high = price_high;
@@ -29,6 +29,16 @@ public class OHLC {
 
     public float getPrice_low() {
         return price_low;
+    }
+
+    public static OHLC[] getMockOHLCList() {
+        OHLC[] ohlcList = new OHLC[30];
+        OHLC mockData = new OHLC(0,0,0,0);
+        for (int i = 0; i < 30; i++) {
+            ohlcList[i] = mockData;
+        }
+
+        return ohlcList;
     }
 
 }

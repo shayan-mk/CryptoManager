@@ -17,6 +17,7 @@ public class DatabaseManager {
     private static DatabaseManager dbManager = null;
     private static final String CRYPTO_FILE = "crypto_data.txt";
     private static final String OHLC_DIR = "ohlc/";
+    private static final OHLC[] MOCK_OHLC_LIST = OHLC.getMockOHLCList();
     private final DatabaseUtility dbUtility;
 
     private DatabaseManager(File databaseDir) {
@@ -63,9 +64,10 @@ public class DatabaseManager {
         };
     }
 
-    public Runnable updateOHLCList(String symbol, List<OHLC> ohlcList, Handler handler) {
+    public Runnable updateOHLCList(CryptoData cryptoData, List<OHLC> ohlcList, Handler handler) {
         return () -> {
-            runUpdateOHLC(symbol, (OHLC[]) ohlcList.toArray());
+            runUpdateOHLC(cryptoData.getSymbol(), (OHLC[]) ohlcList.toArray());
+            cryptoData.fetchOHCL();
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_UPDATE;
             message.arg1 = 1;
@@ -97,6 +99,7 @@ public class DatabaseManager {
         Gson gson = new Gson();
         for (CryptoData cryptoData : cryptoDataList) {
             printWriter.println(gson.toJson(cryptoData, CryptoData.class));
+            runUpdateOHLC(cryptoData.getSymbol(), MOCK_OHLC_LIST);
         }
         printWriter.flush();
         printWriter.close();

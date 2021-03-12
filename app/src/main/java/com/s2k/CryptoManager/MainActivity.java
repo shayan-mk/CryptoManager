@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 import com.s2k.CryptoManager.database.DatabaseManager;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
     private Boolean isLoadingOhlc;
-    private String loadingOhlcSymbol;
+    private CryptoData loadingOhlcCrypto;
     private Handler handler;
     private ExecutorService threadPool;
     private Runnable updateProgressBarRunnable;
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         isRefreshing = false;
         isLoadingMore = false;
         isLoadingOhlc = false;
-        loadingOhlcSymbol = "";
+        loadingOhlcCrypto = null;
         threadPool = Executors.newFixedThreadPool(5);
         DatabaseManager.initDatabase(getFilesDir());
 
@@ -146,10 +145,10 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case DB_OHLC_LOAD:
                         Log.d(TAG, "Message received: DB_OHLC_LOAD");
                         List<OHLC> ohclList = Arrays.asList((OHLC[]) msg.obj);
-                        DialogFragment dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
+                        DialogFragment dialogFragment = new OhlcDialogFragment(loadingOhlcCrypto.getSymbol(), ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
                         isLoadingOhlc = false;
-                        loadingOhlcSymbol = "";
+                        loadingOhlcCrypto = null;
 
                         progressBar.setProgress(0);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -178,14 +177,14 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case NET_OHLC_LOAD:
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
                         ohclList = Arrays.asList((OHLC[]) msg.obj);
-                        dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
+                        dialogFragment = new OhlcDialogFragment(loadingOhlcCrypto.getSymbol(), ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
                         threadPool.execute(DatabaseManager.getInstance()
-                                .updateOHLCList(loadingOhlcSymbol, ohclList, handler));
+                                .updateOHLCList(loadingOhlcCrypto, ohclList, handler));
 
                         isLoadingOhlc = false;
-                        loadingOhlcSymbol = "";
+                        loadingOhlcCrypto = null;
 
                         progressBar.setProgress(0);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -208,17 +207,17 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     }
 
     @Override
-    public void onItemClick(String symbol) {
+    public void onItemClick(CryptoData cryptoData) {
         if (isLoadingOhlc) return;
-        loadingOhlcSymbol = symbol;
+        loadingOhlcCrypto = cryptoData;
         isLoadingOhlc = true;
 
         if (isConnectedToTheInternet()) {
             threadPool.execute(NetworkManager.getInstance()
-                    .loadOHLCList(symbol, NetworkManager.Range.oneMonth, handler));
+                    .loadOHLCList(cryptoData.getSymbol(), NetworkManager.Range.oneMonth, handler));
         } else {
             threadPool.execute(DatabaseManager.getInstance()
-                    .loadOHLCList(symbol, handler));
+                    .loadOHLCList(cryptoData.getSymbol(), handler));
         }
         handler.post(updateProgressBarRunnable);
     }

@@ -11,6 +11,7 @@ public class CryptoData {
     private final String symbol;
     private final String name;
     private final quote quote;
+    private boolean ohlcFetched;
 
     public static class quote {
         public USD USD;
@@ -46,6 +47,7 @@ public class CryptoData {
         this.symbol = symbol;
         this.name = name;
         this.quote = quote;
+        ohlcFetched = false;
     }
 
     public String getId() {
@@ -78,6 +80,14 @@ public class CryptoData {
 
     public float getPercentChange7d() {
         return quote.USD.percent_change_7d;
+    }
+
+    public boolean isOHLCFetched() {
+        return ohlcFetched;
+    }
+
+    public void fetchOHCL() {
+        ohlcFetched = true;
     }
 
     @NonNull
