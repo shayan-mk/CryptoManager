@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     private Handler handler;
     private ExecutorService threadPool;
     private Runnable updateProgressBarRunnable;
+    private ProgressBar progressBar;
 
     public static final int DB_CRYPTO_LOAD = 1001;
     public static final int DB_OHLC_LOAD = DB_CRYPTO_LOAD + 1;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 ((LinearLayoutManager) rvCryptos.getLayoutManager()).getOrientation());
         rvCryptos.addItemDecoration(dividerItemDecoration);
 
-        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
         // TODO week references
@@ -218,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         loadingSymbol = symbol;
         isLoadingOhlc = true;
+        progressBar.setVisibility(View.VISIBLE);
         handler.post(updateProgressBarRunnable);
 
         if (isConnectedToTheInternet()) {
