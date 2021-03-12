@@ -41,7 +41,7 @@ class DatabaseUtility {
     }
 
 
-    PrintWriter getPrintWriter (boolean append, String filename) {
+    PrintWriter getPrintWriter(boolean append, String filename) {
         File file = getFile(filename);
         try {
             FileWriter fileWriter = new FileWriter(file, append);

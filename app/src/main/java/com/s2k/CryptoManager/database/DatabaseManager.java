@@ -10,8 +10,6 @@ import com.s2k.CryptoManager.OHLC;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,11 +33,11 @@ public class DatabaseManager {
 
     public Runnable loadCryptoList(int start, int count, Handler handler) {
         return () -> {
-            List<CryptoData> cryptoDataList = runLoadCrypto(start, count);
+            CryptoData[] cryptoDataList = runLoadCrypto(start, count);
             Message message = new Message();
             message.what = MainActivity.DB_CRYPTO_LOAD;
             message.arg1 = 1;
-            message.obj = cryptoDataList.toArray();
+            message.obj = cryptoDataList;
             handler.sendMessage(message);
         };
     }
@@ -56,7 +54,7 @@ public class DatabaseManager {
 
     public Runnable loadOHLCList(String symbol, Handler handler) {
         return () -> {
-            OHLC[] ohlcList = runLoadOHCL(symbol);
+            OHLC[] ohlcList = runLoadOHLC(symbol);
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_LOAD;
             message.arg1 = 1;
@@ -75,9 +73,10 @@ public class DatabaseManager {
         };
     }
 
-    private List<CryptoData> runLoadCrypto(int start, int count) {
+    private CryptoData[] runLoadCrypto(int start, int count) {
         Scanner scanner = dbUtility.getScanner(CRYPTO_FILE);
-        List<CryptoData> cryptoDataList = new ArrayList<>();
+        Gson gson = new Gson();
+        CryptoData[] cryptoDataList = new CryptoData[count];
         for (int i = 0; i < start; i++) {
             if (!scanner.hasNextLine()) break;
 
@@ -87,9 +86,8 @@ public class DatabaseManager {
             if (!scanner.hasNextLine()) break;
 
             String gsonString = scanner.nextLine();
-            cryptoDataList.add(new Gson().fromJson(gsonString, CryptoData.class));
+            cryptoDataList[i] = gson.fromJson(gsonString, CryptoData.class);
         }
-
         scanner.close();
         return cryptoDataList;
     }
@@ -104,7 +102,7 @@ public class DatabaseManager {
         printWriter.close();
     }
 
-    private OHLC[] runLoadOHCL(String symbol) {
+    private OHLC[] runLoadOHLC(String symbol) {
         Scanner scanner = dbUtility.getScanner(OHLC_DIR + symbol + ".txt");
         Gson gson = new Gson();
         OHLC[] ohlcList = gson.fromJson(scanner.nextLine(), OHLC[].class);

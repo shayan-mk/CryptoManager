@@ -74,45 +74,41 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        Log.d(TAG, "onCreate: salam");
         // TODO week references
         ImageButton refreshButton = (ImageButton) findViewById(R.id.cryptoRefreshButton);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRefreshing || isLoadingMore) {
-                    return;
-                }
-                isRefreshing = true;
-                progressBar.setVisibility(View.VISIBLE);
-
-                if (isConnectedToTheInternet()) {
-                    threadPool.execute(() -> NetworkManager.getInstance().getCryptoDataList(1, handler));
-                } else {
-                    threadPool.execute(DatabaseManager.getInstance().loadCryptoList(0, 10, handler));
-                }
-                handler.post(updateProgressBarRunnable);
+        refreshButton.setOnClickListener(view -> {
+            if (isRefreshing || isLoadingMore) {
+                return;
             }
+            isRefreshing = true;
+            progressBar.setVisibility(View.VISIBLE);
+
+            if (isConnectedToTheInternet()) {
+                threadPool.execute(NetworkManager.getInstance()
+                        .loadCryptoList(1, handler));
+            } else {
+                threadPool.execute(DatabaseManager.getInstance()
+                        .loadCryptoList(0, 10, handler));
+            }
+            handler.post(updateProgressBarRunnable);
         });
 
         ImageButton loadMoreButton = (ImageButton) findViewById(R.id.cryptoLoadMoreButton);
-        loadMoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isRefreshing || isLoadingMore) {
-                    return;
-                }
-                isLoadingMore = true;
-                progressBar.setVisibility(View.VISIBLE);
-
-                if (isConnectedToTheInternet()) {
-                    threadPool.execute(() -> NetworkManager.getInstance().getCryptoDataList(
-                            adapter.getItemCount() / 10 + 1, handler));
-                } else {
-                    threadPool.execute(DatabaseManager.getInstance().loadCryptoList(adapter.getItemCount(), 10, handler));
-                }
-                handler.post(updateProgressBarRunnable);
+        loadMoreButton.setOnClickListener(view -> {
+            if (isRefreshing || isLoadingMore) {
+                return;
             }
+            isLoadingMore = true;
+            progressBar.setVisibility(View.VISIBLE);
+
+            if (isConnectedToTheInternet()) {
+                threadPool.execute(NetworkManager.getInstance()
+                        .loadCryptoList(adapter.getItemCount() / 10 + 1, handler));
+            } else {
+                threadPool.execute(DatabaseManager.getInstance()
+                        .loadCryptoList(adapter.getItemCount(), 10, handler));
+            }
+            handler.post(updateProgressBarRunnable);
         });
 
         updateProgressBarRunnable = new Runnable() {
@@ -124,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 }
             }
         };
-
-        Log.d(TAG, "onCreate: after progress bar");
 
         handler = new Handler(Looper.getMainLooper()) {
             @Override
@@ -168,12 +162,12 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         cryptoDataList = Arrays.asList((CryptoData[]) msg.obj);
                         if (isRefreshing) {
                             adapter.reloadCryptoData(cryptoDataList);
-                            threadPool.execute(DatabaseManager.getInstance().updateCryptoList(
-                                    cryptoDataList, false, handler));
+                            threadPool.execute(DatabaseManager.getInstance()
+                                    .updateCryptoList(cryptoDataList, false, handler));
                         } else {
                             adapter.loadMoreCryptoData(cryptoDataList);
-                            threadPool.execute(DatabaseManager.getInstance().updateCryptoList(
-                                    cryptoDataList, true, handler));
+                            threadPool.execute(DatabaseManager.getInstance()
+                                    .updateCryptoList(cryptoDataList, true, handler));
                         }
                         isRefreshing = false;
                         isLoadingMore = false;
@@ -187,8 +181,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
-                        threadPool.execute(DatabaseManager.getInstance().updateOHLCList(loadingOhlcSymbol,
-                                ohclList, handler));
+                        threadPool.execute(DatabaseManager.getInstance()
+                                .updateOHLCList(loadingOhlcSymbol, ohclList, handler));
 
                         isLoadingOhlc = false;
                         loadingOhlcSymbol = "";
@@ -204,9 +198,11 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         progressBar.setVisibility(View.VISIBLE);
         Log.d(TAG, "onCreate: internetConnection" + isConnectedToTheInternet());
         if (isConnectedToTheInternet()) {
-            threadPool.execute(() -> NetworkManager.getInstance().getCryptoDataList(1, handler));
+            threadPool.execute(NetworkManager.getInstance()
+                    .loadCryptoList(1, handler));
         } else {
-            threadPool.execute(DatabaseManager.getInstance().loadCryptoList(0, 10, handler));
+            threadPool.execute(DatabaseManager.getInstance()
+                    .loadCryptoList(0, 10, handler));
         }
         handler.post(updateProgressBarRunnable);
     }
@@ -218,24 +214,20 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         isLoadingOhlc = true;
 
         if (isConnectedToTheInternet()) {
-            threadPool.execute(() -> NetworkManager.getInstance().getCandles(symbol,
-                    NetworkManager.Range.oneMonth, handler));
+            threadPool.execute(NetworkManager.getInstance()
+                    .loadOHLCList(symbol, NetworkManager.Range.oneMonth, handler));
         } else {
-            threadPool.execute(DatabaseManager.getInstance().loadOHLCList(symbol, handler));
+            threadPool.execute(DatabaseManager.getInstance()
+                    .loadOHLCList(symbol, handler));
         }
         handler.post(updateProgressBarRunnable);
     }
 
     //Internet Connection!
-    public boolean isConnectedToTheInternet(){
+    public boolean isConnectedToTheInternet() {
         ConnectivityManager cm =
                 (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return (netInfo != null && netInfo.isConnectedOrConnecting());
-
-    }
-
-    public File getResourceDir() {
-        return getFilesDir();
     }
 }

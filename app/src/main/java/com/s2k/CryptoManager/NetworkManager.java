@@ -1,26 +1,17 @@
 package com.s2k.CryptoManager;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.github.mikephil.charting.components.Description;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.s2k.CryptoManager.CryptoData;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -34,7 +25,10 @@ public class NetworkManager {
     private static NetworkManager instance = null;
     private static final String TAG = "NetworkManager";
 
-    private static String apiKey = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
+    private static final String API_KEY = "b83b3e60-3bf0-41ed-b117-d38ec00b216d";
+
+    private NetworkManager() {
+    }
 
     public static NetworkManager getInstance() {
         if (instance == null) {
@@ -43,16 +37,24 @@ public class NetworkManager {
         return instance;
     }
 
+    public Runnable loadCryptoList(int groupNumber, Handler handler) {
+        return () -> runLoadCrypto(groupNumber, handler);
+    }
+
+    public Runnable loadOHLCList(String symbol, Range range, Handler handler) {
+        return () -> runLoadOHLC(symbol, range, handler);
+    }
+
     //Crypto coins' information
-    public void getCryptoDataList(int groupNumber, Handler handler){
+    public void runLoadCrypto(int groupNumber, Handler handler) {
         HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("start", String.valueOf(groupNumber*10 - 9));
+        parameters.put("start", String.valueOf(groupNumber * 10 - 9));
         parameters.put("limit", "10");
         String url = buildURL("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", parameters);
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
-                .addHeader("X-CMC_PRO_API_KEY", apiKey).build();
+                .addHeader("X-CMC_PRO_API_KEY", API_KEY).build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
         Log.d(TAG, "request: " + request.toString());
@@ -80,8 +82,6 @@ public class NetworkManager {
                     String dataJson = obj.get("data").toString();
                     Gson gson = new Gson();
                     CryptoData[] cryptoData = gson.fromJson(dataJson, CryptoData[].class);
-//                    Log.d(TAG, "OnResponse: cryptoData0 " + cryptoData[0]);
-//                    List<CryptoData> cryptoDataList = Arrays.asList(cryptoData);
                     Message message = new Message();
                     message.what = MainActivity.NET_CRYPTO_LOAD;
                     message.arg1 = 1;
@@ -99,25 +99,21 @@ public class NetworkManager {
     }
 
 
-    public void getCandles(String symbol,Range range, Handler handler) {
+    public void runLoadOHLC(String symbol, Range range, Handler handler) {
 
         String miniUrl;
-        final String description;
         switch (range) {
 
             case weekly:
                 miniUrl = "period_id=1DAY".concat("&time_end=".concat(getCurrentDate()).concat("&limit=7"));
-                description = "Daily candles from now";
                 break;
 
             case oneMonth:
                 miniUrl = "period_id=1DAY".concat("&time_end=".concat(getCurrentDate()).concat("&limit=30"));
-                description = "Daily candles from now";
                 break;
 
             default:
                 miniUrl = "";
-                description = "";
 
         }
 
@@ -146,9 +142,9 @@ public class NetworkManager {
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
 
-                    if (!response.isSuccessful()) {
-                        throw new IOException("Unexpected code " + response);
-                    } else {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                } else {
                     extractCandlesFromResponse(response.body().string(), handler);
                 }
             }
@@ -156,19 +152,18 @@ public class NetworkManager {
 
     }
 
-    private void extractCandlesFromResponse(String body, Handler handler){
+    private void extractCandlesFromResponse(String body, Handler handler) {
         Gson gson = new Gson();
-        OHLC[] ohlcs = gson.fromJson(body, OHLC[].class);
-//        List<OHLC> OHLCList = Arrays.asList(ohlcs);
+        OHLC[] ohlcList = gson.fromJson(body, OHLC[].class);
         Message message = new Message();
         message.what = MainActivity.NET_OHLC_LOAD;
         message.arg1 = 1;
-        message.obj = ohlcs;
+        message.obj = ohlcList;
         handler.sendMessage(message);
 
     }
 
-    private String buildURL(String string, HashMap<String, String> queryParameters){
+    private String buildURL(String string, HashMap<String, String> queryParameters) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(string).newBuilder();
 
         for (String param : queryParameters.keySet()) {
