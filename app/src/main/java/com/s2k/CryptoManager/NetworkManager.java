@@ -184,6 +184,7 @@ public class NetworkManager {
 
         SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss");
 
+
         String date1 = format1.format(date);
 
         Date inActiveDate = null;

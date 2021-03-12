@@ -3,43 +3,43 @@ package com.s2k.CryptoManager;
 
 public class OHLC {
 
-    private final float timeOpen;
-    private final float timeClose;
-    private final float priceOpen;
-    private final float priceClose;
-    private final float priceHigh;
-    private final float priceLow;
+    private final float time_open;
+    private final float time_close;
+    private final float price_open;
+    private final float price_close;
+    private final float price_high;
+    private final float price_low;
 
-    public OHLC(float timeOpen, float timeClose, float priceOpen, float priceClose, float priceHigh, float priceLow) {
-        this.timeOpen = timeOpen;
-        this.timeClose = timeClose;
-        this.priceOpen = priceOpen;
-        this.priceClose = priceClose;
-        this.priceHigh = priceHigh;
-        this.priceLow = priceLow;
+    public OHLC(float time_open, float time_close, float price_open, float price_close, float price_high, float price_low) {
+        this.time_open = time_open;
+        this.time_close = time_close;
+        this.price_open = price_open;
+        this.price_close = price_close;
+        this.price_high = price_high;
+        this.price_low = price_low;
     }
 
-    public float getPriceOpen() {
-        return priceOpen;
+    public float getPrice_open() {
+        return price_open;
     }
 
-    public float getPriceClose() {
-        return priceClose;
+    public float getPrice_close() {
+        return price_close;
     }
 
-    public float getPriceHigh() {
-        return priceHigh;
+    public float getPrice_high() {
+        return price_high;
     }
 
-    public float getPriceLow() {
-        return priceLow;
+    public float getPrice_low() {
+        return price_low;
     }
 
-    public float getTimeOpen() {
-        return timeOpen;
+    public float getTime_open() {
+        return time_open;
     }
 
-    public float getTimeClose() {
-        return timeClose;
+    public float getTime_close() {
+        return time_close;
     }
 }
