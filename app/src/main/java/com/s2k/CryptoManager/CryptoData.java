@@ -40,9 +40,9 @@ public class CryptoData {
         }
     }
 
-    public CryptoData(String id, String logo, String symbol, String name, CryptoData.quote quote) {
+    public CryptoData(String id, String symbol, String name, CryptoData.quote quote) {
         this.id = id;
-        this.logo = logo;
+        this.logo = "https://s2.coinmarketcap.com/static/img/coins/64x64/" + id + ".png";
         this.symbol = symbol;
         this.name = name;
         this.quote = quote;
