@@ -127,11 +127,9 @@ public class NetworkManager {
 
         // your coin IO API key...
         final Request request = new Request.Builder().url(url)
-                .addHeader("X-CoinAPI-Key", COIN_IO_API_KEY)
-                .build();
+                .addHeader("X-CoinAPI-Key", COIN_IO_API_KEY).build();
 
         OkHttpClient okHttpClient = new OkHttpClient();
-
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -174,33 +172,20 @@ public class NetworkManager {
 
     }
 
-
     private String getCurrentDate() {
-        Calendar cal = Calendar.getInstance();
+        Calendar calender = Calendar.getInstance();
 
-        cal.add(Calendar.DATE, 1);
+        calender.add(Calendar.DATE, 1);
 
-        Date date = cal.getTime();
+        Date date = calender.getTime();
 
-        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
 
-        String date1 = format1.format(date);
+        String dateString = dateFormat.format(date);
+        String timeString = timeFormat.format(date);
 
-        Date inActiveDate = null;
-
-        try {
-
-            inActiveDate = format1.parse(date1);
-
-        } catch (ParseException e1) {
-
-            // TODO Auto-generated catch block
-
-            e1.printStackTrace();
-
-        }
-        Log.d(TAG, "getCurrentDate: " + inActiveDate.toString());
-        return inActiveDate.toString();
+        return dateString + "T" + timeString;
     }
 
 }
