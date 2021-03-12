@@ -6,19 +6,21 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 public class CryptoData {
-    public String id;
-    public String logo; //maybe need to change
-    public String symbol;
-    public String name;
-    public quote quote;
+    private static final String LOGO_URL = "https://s2.coinmarketcap.com/static/img/coins/64x64/";
+    private final String id;
+    private final String logo; //maybe need to change
+    private final String symbol;
+    private final String name;
+    private final quote quote;
 
-    public static class quote{
+    public static class quote {
         public USD USD;
+
         public quote(USD USD) {
             this.USD = USD;
         }
 
-        public static class USD{
+        public static class USD {
             public USD(float price, float percent_change_1h, float percent_change_24h, float percent_change_7d) {
                 this.price = price;
                 this.percent_change_1h = percent_change_1h;
@@ -42,7 +44,7 @@ public class CryptoData {
 
     public CryptoData(String id, String symbol, String name, CryptoData.quote quote) {
         this.id = id;
-        this.logo = "https://s2.coinmarketcap.com/static/img/coins/64x64/" + id + ".png";
+        this.logo = LOGO_URL + id + ".png";
         this.symbol = symbol;
         this.name = name;
         this.quote = quote;
@@ -64,33 +66,25 @@ public class CryptoData {
         return name;
     }
 
-    public float getPrice(){
+    public float getPrice() {
         return quote.USD.price;
     }
 
-    public float getPercentChange1h(){
+    public float getPercentChange1h() {
         return quote.USD.percent_change_1h;
     }
 
-    public float getPercentChange24h(){
+    public float getPercentChange24h() {
         return quote.USD.percent_change_24h;
     }
 
-    public float getPercentChange7d(){
+    public float getPercentChange7d() {
         return quote.USD.percent_change_7d;
     }
-
 
     @NonNull
     @Override
     public String toString() {
         return id + " - " + symbol + " - " + name + " - " + quote.toString();
-    }
-
-    // mock data
-    public static List<CryptoData> createCryptoDataList() {
-        List<CryptoData> list = new ArrayList<>();
-        //Todo:
-        return list;
     }
 }

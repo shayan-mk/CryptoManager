@@ -3,12 +3,12 @@ package com.s2k.CryptoManager;
 
 public class OHLC {
 
-    private float timeOpen;
-    private float timeClose;
-    private float priceOpen;
-    private float priceClose;
-    private float priceHigh;
-    private float priceLow;
+    private final float timeOpen;
+    private final float timeClose;
+    private final float priceOpen;
+    private final float priceClose;
+    private final float priceHigh;
+    private final float priceLow;
 
     public OHLC(float timeOpen, float timeClose, float priceOpen, float priceClose, float priceHigh, float priceLow) {
         this.timeOpen = timeOpen;
@@ -33,5 +33,13 @@ public class OHLC {
 
     public float getPriceLow() {
         return priceLow;
+    }
+
+    public float getTimeOpen() {
+        return timeOpen;
+    }
+
+    public float getTimeClose() {
+        return timeClose;
     }
 }
