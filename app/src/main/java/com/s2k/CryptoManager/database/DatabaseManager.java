@@ -17,7 +17,7 @@ public class DatabaseManager {
     private static DatabaseManager dbManager = null;
     private static final String CRYPTO_FILE = "crypto_data.txt";
     private static final String OHLC_DIR = "ohlc/";
-    private static final OHLC[] MOCK_OHLC_LIST = OHLC.getMockOHLCList();
+    private static final OHLC[] MOCK_OHLC_LIST = new OHLC[0];
     private final DatabaseUtility dbUtility;
 
     private DatabaseManager(File databaseDir) {
@@ -64,10 +64,9 @@ public class DatabaseManager {
         };
     }
 
-    public Runnable updateOHLCList(CryptoData cryptoData, List<OHLC> ohlcList, Handler handler) {
+    public Runnable updateOHLCList(String symbol, List<OHLC> ohlcList, Handler handler) {
         return () -> {
-            runUpdateOHLC(cryptoData.getSymbol(), (OHLC[]) ohlcList.toArray());
-            cryptoData.fetchOHCL();
+            runUpdateOHLC(symbol, (OHLC[]) ohlcList.toArray());
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_UPDATE;
             message.arg1 = 1;
@@ -108,10 +107,7 @@ public class DatabaseManager {
     private OHLC[] runLoadOHLC(String symbol) {
         Scanner scanner = dbUtility.getScanner(OHLC_DIR + symbol + ".txt");
         Gson gson = new Gson();
-        OHLC[] ohlcList = null;
-        if (scanner.hasNextLine()){
-            ohlcList = gson.fromJson(scanner.nextLine(), OHLC[].class);
-        }
+        OHLC[] ohlcList = gson.fromJson(scanner.nextLine(), OHLC[].class);
         scanner.close();
         return ohlcList;
     }

@@ -48,7 +48,7 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         holder.price.setText(data.getPrice() + "$");
 
 
-        holder.itemView.setOnClickListener(view -> listener.onItemClick(data));
+        holder.itemView.setOnClickListener(view -> listener.onItemClick(data.getSymbol()));
     }
 
     @Override
@@ -95,6 +95,6 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
     }
 
     public interface OnItemClickListener {
-        void onItemClick(CryptoData cryptoData);
+        void onItemClick(String symbol);
     }
 }

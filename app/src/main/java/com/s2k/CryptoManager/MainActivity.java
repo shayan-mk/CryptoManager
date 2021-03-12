@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
     private Boolean isRefreshing;
     private Boolean isLoadingMore;
     private Boolean isLoadingOhlc;
-    private CryptoData loadingOhlcCrypto;
+    private String loadingSymbol;
     private Handler handler;
     private ExecutorService threadPool;
     private Runnable updateProgressBarRunnable;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         isRefreshing = false;
         isLoadingMore = false;
         isLoadingOhlc = false;
-        loadingOhlcCrypto = null;
+        loadingSymbol = null;
         threadPool = Executors.newFixedThreadPool(5);
         DatabaseManager.initDatabase(getFilesDir());
 
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             }
             isRefreshing = true;
             progressBar.setVisibility(View.VISIBLE);
+            handler.post(updateProgressBarRunnable);
 
             if (isConnectedToTheInternet()) {
                 threadPool.execute(NetworkManager.getInstance()
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 threadPool.execute(DatabaseManager.getInstance()
                         .loadCryptoList(0, 10, handler));
             }
-            handler.post(updateProgressBarRunnable);
         });
 
         ImageButton loadMoreButton = (ImageButton) findViewById(R.id.cryptoLoadMoreButton);
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             }
             isLoadingMore = true;
             progressBar.setVisibility(View.VISIBLE);
+            handler.post(updateProgressBarRunnable);
 
             if (isConnectedToTheInternet()) {
                 threadPool.execute(NetworkManager.getInstance()
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 threadPool.execute(DatabaseManager.getInstance()
                         .loadCryptoList(adapter.getItemCount(), 10, handler));
             }
-            handler.post(updateProgressBarRunnable);
         });
 
         updateProgressBarRunnable = new Runnable() {
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             public void handleMessage(@NonNull Message msg) {
 
                 Log.d(TAG, "handleMessage: " + msg.what);
+                DialogFragment dialogFragment;
                 switch (msg.what) {
                     case DB_CRYPTO_LOAD:
                         Log.d(TAG, "Message received: DB_CRYPTO_LOAD");
@@ -145,10 +146,14 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case DB_OHLC_LOAD:
                         Log.d(TAG, "Message received: DB_OHLC_LOAD");
                         List<OHLC> ohclList = Arrays.asList((OHLC[]) msg.obj);
-                        DialogFragment dialogFragment = new OhlcDialogFragment(loadingOhlcCrypto.getSymbol(), ohclList);
-                        dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+                        if (ohclList.isEmpty()) {
+                            Toast.makeText(MainActivity.this, "OHLC data is not available", Toast.LENGTH_SHORT).show();
+                        } else {
+                            dialogFragment = new OhlcDialogFragment(loadingSymbol, ohclList);
+                            dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+                        }
                         isLoadingOhlc = false;
-                        loadingOhlcCrypto = null;
+                        loadingSymbol = null;
 
                         progressBar.setProgress(0);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -177,14 +182,14 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case NET_OHLC_LOAD:
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
                         ohclList = Arrays.asList((OHLC[]) msg.obj);
-                        dialogFragment = new OhlcDialogFragment(loadingOhlcCrypto.getSymbol(), ohclList);
+                        dialogFragment = new OhlcDialogFragment(loadingSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
                         threadPool.execute(DatabaseManager.getInstance()
-                                .updateOHLCList(loadingOhlcCrypto, ohclList, handler));
+                                .updateOHLCList(loadingSymbol, ohclList, handler));
 
                         isLoadingOhlc = false;
-                        loadingOhlcCrypto = null;
+                        loadingSymbol = null;
 
                         progressBar.setProgress(0);
                         progressBar.setVisibility(View.INVISIBLE);
@@ -196,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         isLoadingMore = true;
         progressBar.setVisibility(View.VISIBLE);
         Log.d(TAG, "onCreate: internetConnection" + isConnectedToTheInternet());
+        handler.post(updateProgressBarRunnable);
+
         if (isConnectedToTheInternet()) {
             threadPool.execute(NetworkManager.getInstance()
                     .loadCryptoList(1, handler));
@@ -203,23 +210,23 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             threadPool.execute(DatabaseManager.getInstance()
                     .loadCryptoList(0, 10, handler));
         }
-        handler.post(updateProgressBarRunnable);
     }
 
     @Override
-    public void onItemClick(CryptoData cryptoData) {
+    public void onItemClick(String symbol) {
         if (isLoadingOhlc) return;
-        loadingOhlcCrypto = cryptoData;
+
+        loadingSymbol = symbol;
         isLoadingOhlc = true;
+        handler.post(updateProgressBarRunnable);
 
         if (isConnectedToTheInternet()) {
             threadPool.execute(NetworkManager.getInstance()
-                    .loadOHLCList(cryptoData.getSymbol(), NetworkManager.Range.oneMonth, handler));
+                    .loadOHLCList(symbol, NetworkManager.Range.oneMonth, handler));
         } else {
             threadPool.execute(DatabaseManager.getInstance()
-                    .loadOHLCList(cryptoData.getSymbol(), handler));
+                    .loadOHLCList(symbol, handler));
         }
-        handler.post(updateProgressBarRunnable);
     }
 
     //Internet Connection!

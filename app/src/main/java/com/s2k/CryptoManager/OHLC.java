@@ -30,15 +30,4 @@ public class OHLC {
     public float getPrice_low() {
         return price_low;
     }
-
-    public static OHLC[] getMockOHLCList() {
-        OHLC[] ohlcList = new OHLC[30];
-        OHLC mockData = new OHLC(0,0,0,0);
-        for (int i = 0; i < 30; i++) {
-            ohlcList[i] = mockData;
-        }
-
-        return ohlcList;
-    }
-
 }
