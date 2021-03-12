@@ -36,7 +36,6 @@ public class OhlcDialogFragment extends AppCompatDialogFragment {
 
     public OhlcDialogFragment(String symbol, List<OHLC> data) {
         this.symbol = symbol;
-        Collections.reverse(data);
         oneMonthList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             OHLC candle = data.get(i);

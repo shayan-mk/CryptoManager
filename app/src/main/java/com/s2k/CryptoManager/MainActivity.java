@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.s2k.CryptoManager.database.DatabaseManager;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -178,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                     case NET_OHLC_LOAD:
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
                         ohclList = Arrays.asList((OHLC[]) msg.obj);
+                        Collections.reverse(ohclList);
                         dialogFragment = new OhlcDialogFragment(loadingSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
