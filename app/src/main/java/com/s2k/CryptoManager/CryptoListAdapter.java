@@ -1,12 +1,17 @@
 package com.s2k.CryptoManager;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +22,7 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
     private final List<CryptoData> cryptoDataList;
     private final Context context;
     private final OnItemClickListener listener;
+    private DecimalFormat priceFormat = new DecimalFormat("0.00");
 
     public CryptoListAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
@@ -42,11 +48,20 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
 
         GlideApp.with(context).load(data.getLogo()).into(holder.icon);
         holder.name.setText(data.getSymbol() + " | " + data.getName());
-        holder.oneHourChange.setText("1h: " + ((int) data.getPercentChange1h()) + "%");
-        holder.oneDayChange.setText("1d: " + ((int) data.getPercentChange24h()) + "%");
-        holder.oneWeekChange.setText("7d: " + ((int) data.getPercentChange7d()) + "%");
-        holder.price.setText(data.getPrice() + "$");
 
+        Spannable spannable = new SpannableString("1H: " + (int) data.getPercentChange1h() + "%");
+        spannable.setSpan(new ForegroundColorSpan(data.getPercentChange1h() > 0 ? Color.GREEN : Color.RED), 4, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.oneHourChange.setText(spannable, TextView.BufferType.SPANNABLE);
+
+        spannable = new SpannableString("1D: " + (int) data.getPercentChange24h() + "%");
+        spannable.setSpan(new ForegroundColorSpan(data.getPercentChange24h() > 0 ? Color.GREEN : Color.RED), 4, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.oneDayChange.setText(spannable, TextView.BufferType.SPANNABLE);
+
+        spannable = new SpannableString("7D: " + (int) data.getPercentChange7d() + "%");
+        spannable.setSpan(new ForegroundColorSpan(data.getPercentChange7d() > 0 ? Color.GREEN : Color.RED), 4, spannable.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        holder.oneWeekChange.setText(spannable, TextView.BufferType.SPANNABLE);
+
+        holder.price.setText(priceFormat.format(data.getPrice()) + "$");
 
         holder.itemView.setOnClickListener(view -> listener.onItemClick(data.getSymbol()));
     }
