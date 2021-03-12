@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         progressBar.setVisibility(View.INVISIBLE);
                         break;
                     case DB_CRYPTO_UPDATE:
-                        Log.d(TAG, "Message received: DB_CRYPTO_WRITE");
+                        Log.d(TAG, "Message received: DB_CRYPTO_UPDATE");
                         break;
                     case DB_OHLC_LOAD:
                         Log.d(TAG, "Message received: DB_OHLC_LOAD");
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         progressBar.setVisibility(View.INVISIBLE);
                         break;
                     case DB_OHLC_UPDATE:
-                        Log.d(TAG, "Message received: DB_OHLC_WRITE");
+                        Log.d(TAG, "Message received: DB_OHLC_UPDATE");
                         break;
                     case NET_CRYPTO_LOAD:
                         Log.d(TAG, "Message received: NET_CRYPTO_LOAD");

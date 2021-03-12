@@ -105,7 +105,10 @@ public class DatabaseManager {
     private OHLC[] runLoadOHLC(String symbol) {
         Scanner scanner = dbUtility.getScanner(OHLC_DIR + symbol + ".txt");
         Gson gson = new Gson();
-        OHLC[] ohlcList = gson.fromJson(scanner.nextLine(), OHLC[].class);
+        OHLC[] ohlcList = null;
+        if (scanner.hasNextLine()){
+            ohlcList = gson.fromJson(scanner.nextLine(), OHLC[].class);
+        }
         scanner.close();
         return ohlcList;
     }

@@ -14,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.ViewHolder> {
-    private List<CryptoData> cryptoDataList;
+    private final List<CryptoData> cryptoDataList;
+    private final Context context;
+    private final OnItemClickListener listener;
 
-    private Context context;
-    private OnItemClickListener listener;
     public CryptoListAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
         this.cryptoDataList = new ArrayList<>();
@@ -33,24 +33,22 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         View cryptoView = inflater.inflate(R.layout.crypto_list_item, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(cryptoView);
-        return viewHolder;
+        return new ViewHolder(cryptoView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CryptoData data = cryptoDataList.get(position);
 
-        GlideApp.with(context)
-                .load(data.logo)
-                .into(holder.icon);
-        holder.name.setText(data.symbol + " | " + data.name);
-        holder.oneHourChange.setText("1h: " + ((int)data.getPercentChange1h()) + "%");
-        holder.oneDayChange.setText("1d: " + ((int)data.getPercentChange24h()) + "%");
-        holder.oneWeekChange.setText("7d: " + ((int)data.getPercentChange7d()) + "%");
+        GlideApp.with(context).load(data.getLogo()).into(holder.icon);
+        holder.name.setText(data.getSymbol() + " | " + data.getName());
+        holder.oneHourChange.setText("1h: " + ((int) data.getPercentChange1h()) + "%");
+        holder.oneDayChange.setText("1d: " + ((int) data.getPercentChange24h()) + "%");
+        holder.oneWeekChange.setText("7d: " + ((int) data.getPercentChange7d()) + "%");
         holder.price.setText(data.getPrice() + "$");
 
-        holder.itemView.setOnClickListener(view -> listener.onItemClick(data.symbol));
+
+        holder.itemView.setOnClickListener(view -> listener.onItemClick(data.getSymbol()));
     }
 
     @Override
@@ -70,7 +68,7 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public ImageView icon;
@@ -79,6 +77,7 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
         public TextView oneDayChange;
         public TextView oneWeekChange;
         public TextView price;
+
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
