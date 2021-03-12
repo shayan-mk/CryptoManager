@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -174,8 +176,31 @@ public class NetworkManager {
 
 
     private String getCurrentDate() {
-        Date c = Calendar.getInstance().getTime();
-        return c.toString();
+        Calendar cal = Calendar.getInstance();
+
+        cal.add(Calendar.DATE, 1);
+
+        Date date = cal.getTime();
+
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss");
+
+        String date1 = format1.format(date);
+
+        Date inActiveDate = null;
+
+        try {
+
+            inActiveDate = format1.parse(date1);
+
+        } catch (ParseException e1) {
+
+            // TODO Auto-generated catch block
+
+            e1.printStackTrace();
+
+        }
+        Log.d(TAG, "getCurrentDate: " + inActiveDate.toString());
+        return inActiveDate.toString();
     }
 
 }
