@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -35,6 +36,7 @@ public class OhlcDialogFragment extends AppCompatDialogFragment {
 
     public OhlcDialogFragment(String symbol, List<OHLC> data) {
         this.symbol = symbol;
+        Collections.reverse(data);
         oneMonthList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             OHLC candle = data.get(i);
