@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         dialogFragment = new OhlcDialogFragment(loadingOhlcSymbol, ohclList);
                         dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
-                        threadPool.execute(DatabaseManager.getInstance().updateOHLC(loadingOhlcSymbol,
+                        threadPool.execute(DatabaseManager.getInstance().updateOHLCList(loadingOhlcSymbol,
                                 ohclList, handler));
 
                         isLoadingOhlc = false;
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             threadPool.execute(() -> NetworkManager.getInstance().getCandles(symbol,
                     NetworkManager.Range.oneMonth, handler));
         } else {
-            threadPool.execute(DatabaseManager.getInstance().loadOHLC(symbol, handler));
+            threadPool.execute(DatabaseManager.getInstance().loadOHLCList(symbol, handler));
         }
         handler.post(updateProgressBarRunnable);
     }

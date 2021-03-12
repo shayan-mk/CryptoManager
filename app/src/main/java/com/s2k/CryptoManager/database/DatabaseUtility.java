@@ -10,10 +10,9 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 class DatabaseUtility {
-    private static final String TAG = "DatabaseUtilities";
     private final File databaseDir;
 
-    public DatabaseUtility(File databaseDir) {
+    DatabaseUtility(File databaseDir) {
         this.databaseDir = databaseDir;
     }
 

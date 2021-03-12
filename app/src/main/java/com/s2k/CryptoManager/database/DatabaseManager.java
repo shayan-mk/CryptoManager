@@ -46,7 +46,7 @@ public class DatabaseManager {
 
     public Runnable updateCryptoList(List<CryptoData> cryptoDataList, boolean append, Handler handler) {
         return () -> {
-            runUpdateCrypto(cryptoDataList, append);
+            runUpdateCrypto((CryptoData[]) cryptoDataList.toArray(), append);
             Message message = new Message();
             message.what = MainActivity.DB_CRYPTO_UPDATE;
             message.arg1 = 1;
@@ -54,20 +54,20 @@ public class DatabaseManager {
         };
     }
 
-    public Runnable loadOHLC(String symbol, Handler handler) {
+    public Runnable loadOHLCList(String symbol, Handler handler) {
         return () -> {
-            List<OHLC> ohlcList = runLoadOHCL(symbol);
+            OHLC[] ohlcList = runLoadOHCL(symbol);
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_LOAD;
             message.arg1 = 1;
-            message.obj = ohlcList.toArray();
+            message.obj = ohlcList;
             handler.sendMessage(message);
         };
     }
 
-    public Runnable updateOHLC(String symbol, List<OHLC> ohlcList, Handler handler) {
+    public Runnable updateOHLCList(String symbol, List<OHLC> ohlcList, Handler handler) {
         return () -> {
-            runUpdateOHLC(symbol, ohlcList);
+            runUpdateOHLC(symbol, (OHLC[]) ohlcList.toArray());
             Message message = new Message();
             message.what = MainActivity.DB_OHLC_UPDATE;
             message.arg1 = 1;
@@ -94,26 +94,28 @@ public class DatabaseManager {
         return cryptoDataList;
     }
 
-    private synchronized void runUpdateCrypto(List<CryptoData> cryptoDataList, boolean append) {
+    private synchronized void runUpdateCrypto(CryptoData[] cryptoDataList, boolean append) {
         PrintWriter printWriter = dbUtility.getPrintWriter(append, CRYPTO_FILE);
-
+        Gson gson = new Gson();
         for (CryptoData cryptoData : cryptoDataList) {
-            printWriter.println(new Gson().toJson(cryptoData, CryptoData.class));
+            printWriter.println(gson.toJson(cryptoData, CryptoData.class));
         }
         printWriter.flush();
         printWriter.close();
     }
 
-    private List<OHLC> runLoadOHCL(String symbol) {
+    private OHLC[] runLoadOHCL(String symbol) {
         Scanner scanner = dbUtility.getScanner(OHLC_DIR + symbol + ".txt");
-        List<OHLC> ohlcList = Arrays.asList(new Gson().fromJson(scanner.nextLine(), OHLC[].class));
+        Gson gson = new Gson();
+        OHLC[] ohlcList = gson.fromJson(scanner.nextLine(), OHLC[].class);
         scanner.close();
         return ohlcList;
     }
 
-    private synchronized void runUpdateOHLC(String symbol, List<OHLC> ohlcList) {
+    private synchronized void runUpdateOHLC(String symbol, OHLC[] ohlcList) {
         PrintWriter printWriter = dbUtility.getPrintWriter(false, OHLC_DIR + symbol + ".txt");
-        printWriter.println(new Gson().toJson(ohlcList.toArray(), OHLC[].class));
+        Gson gson = new Gson();
+        printWriter.println(gson.toJson(ohlcList, OHLC[].class));
         printWriter.flush();
         printWriter.close();
     }
