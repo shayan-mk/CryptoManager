@@ -81,8 +81,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 return;
             }
             isRefreshing = true;
-            progressBar.setVisibility(View.VISIBLE);
-            handler.post(updateProgressBarRunnable);
+            showProgressBar();
 
             if (isConnectedToTheInternet()) {
                 threadPool.execute(NetworkManager.getInstance()
@@ -99,8 +98,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                 return;
             }
             isLoadingMore = true;
-            progressBar.setVisibility(View.VISIBLE);
-            handler.post(updateProgressBarRunnable);
+            showProgressBar();
 
             if (isConnectedToTheInternet()) {
                 threadPool.execute(NetworkManager.getInstance()
@@ -138,8 +136,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                             Toast.makeText(MainActivity.this, "There is no data to show", Toast.LENGTH_SHORT).show();
                         }
 
-                        progressBar.setProgress(0);
-                        progressBar.setVisibility(View.INVISIBLE);
+                        handleProgressBar();
                         break;
                     case DB_CRYPTO_UPDATE:
                         Log.d(TAG, "Message received: DB_CRYPTO_UPDATE");
@@ -156,8 +153,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         isLoadingOhlc = false;
                         loadingSymbol = null;
 
-                        progressBar.setProgress(0);
-                        progressBar.setVisibility(View.INVISIBLE);
+                        handleProgressBar();
                         break;
                     case DB_OHLC_UPDATE:
                         Log.d(TAG, "Message received: DB_OHLC_UPDATE");
@@ -177,8 +173,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         isRefreshing = false;
                         isLoadingMore = false;
 
-                        progressBar.setProgress(0);
-                        progressBar.setVisibility(View.INVISIBLE);
+                        handleProgressBar();
                         break;
                     case NET_OHLC_LOAD:
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
@@ -192,17 +187,15 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         isLoadingOhlc = false;
                         loadingSymbol = null;
 
-                        progressBar.setProgress(0);
-                        progressBar.setVisibility(View.INVISIBLE);
+                        handleProgressBar();
                         break;
                 }
             }
         };
 
         isLoadingMore = true;
-        progressBar.setVisibility(View.VISIBLE);
+        showProgressBar();
         Log.d(TAG, "onCreate: internetConnection" + isConnectedToTheInternet());
-        handler.post(updateProgressBarRunnable);
 
         if (isConnectedToTheInternet()) {
             threadPool.execute(NetworkManager.getInstance()
@@ -219,8 +212,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
         loadingSymbol = symbol;
         isLoadingOhlc = true;
-        progressBar.setVisibility(View.VISIBLE);
-        handler.post(updateProgressBarRunnable);
+        showProgressBar();
 
         if (isConnectedToTheInternet()) {
             threadPool.execute(NetworkManager.getInstance()
@@ -228,6 +220,22 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
         } else {
             threadPool.execute(DatabaseManager.getInstance()
                     .loadOHLCList(symbol, handler));
+        }
+    }
+
+    private void showProgressBar() {
+        if (progressBar.getVisibility() != View.VISIBLE) {
+            progressBar.setVisibility(View.VISIBLE);
+            handler.post(updateProgressBarRunnable);
+        } else {
+            progressBar.setProgress(0);
+        }
+    }
+
+    private void handleProgressBar() {
+        if (!isLoadingMore && !isRefreshing && !isLoadingOhlc) {
+            progressBar.setProgress(0);
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
