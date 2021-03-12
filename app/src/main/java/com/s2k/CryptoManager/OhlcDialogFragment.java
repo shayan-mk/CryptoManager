@@ -73,8 +73,6 @@ public class OhlcDialogFragment extends AppCompatDialogFragment {
         YAxis rightAxis = chart.getAxisRight();
         yAxis.setDrawGridLines(false);
         rightAxis.setDrawGridLines(false);
-        yAxis.setGranularity(1f);
-        rightAxis.setGranularity(1f);
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setDrawGridLines(false);
