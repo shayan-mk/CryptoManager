@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 public class CryptoData {
     private static final String LOGO_URL = "https://s2.coinmarketcap.com/static/img/coins/64x64/";
     private final String id;
-    private final String logo; //maybe need to change
     private final String symbol;
     private final String name;
     private final quote quote;
@@ -44,7 +43,6 @@ public class CryptoData {
 
     public CryptoData(String id, String symbol, String name, CryptoData.quote quote) {
         this.id = id;
-        this.logo = LOGO_URL + id + ".png";
         this.symbol = symbol;
         this.name = name;
         this.quote = quote;
@@ -55,7 +53,7 @@ public class CryptoData {
     }
 
     public String getLogo() {
-        return logo;
+        return LOGO_URL + id + ".png";
     }
 
     public String getSymbol() {
