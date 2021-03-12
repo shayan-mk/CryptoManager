@@ -40,11 +40,11 @@ public class OhlcDialogFragment extends AppCompatDialogFragment {
         oneMonthList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             OHLC candle = data.get(i);
-            oneMonthList.add(new CandleEntry(i, candle.getPrice_high(), candle.getPrice_low(), candle.getPrice_open(), candle.getPrice_close())); // TODO
+            oneMonthList.add(new CandleEntry(i, candle.getPrice_high(), candle.getPrice_low(), candle.getPrice_open(), candle.getPrice_close()));
         }
         oneWeekList = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            oneWeekList.add(oneMonthList.get(i)); //TODO
+        for (int i = oneMonthList.size() - 7; i < oneMonthList.size(); i++) {
+            oneWeekList.add(oneMonthList.get(i));
         }
     }
 
