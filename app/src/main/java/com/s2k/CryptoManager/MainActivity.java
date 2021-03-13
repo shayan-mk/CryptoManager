@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.s2k.CryptoManager.database.DatabaseManager;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -197,17 +198,18 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             }
         };
 
-        isLoadingMore = true;
-        showProgressBar();
         Log.d(TAG, "onCreate: internetConnection" + isConnectedToTheInternet());
 
         if (isConnectedToTheInternet()) {
+            isRefreshing = true;
             threadPool.execute(NetworkManager.getInstance()
                     .loadCryptoList(1, handler));
         } else {
+            isLoadingMore = true;
             threadPool.execute(DatabaseManager.getInstance()
                     .loadCryptoList(0, handler));
         }
+        showProgressBar();
     }
 
     @Override
