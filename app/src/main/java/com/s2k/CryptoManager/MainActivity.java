@@ -168,11 +168,11 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         if (isRefreshing) {
                             adapter.reloadCryptoData(cryptoDataList);
                             threadPool.execute(DatabaseManager.getInstance()
-                                    .updateCryptoList(cryptoDataList, false, handler));
+                                    .updateCryptoList(0, cryptoDataList , handler));
                         } else {
                             adapter.loadMoreCryptoData(cryptoDataList);
                             threadPool.execute(DatabaseManager.getInstance()
-                                    .updateCryptoList(cryptoDataList, true, handler));
+                                    .updateCryptoList(adapter.getItemCount() / 10 - 1, cryptoDataList , handler));
                         }
                         isRefreshing = false;
                         isLoadingMore = false;
