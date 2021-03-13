@@ -23,11 +23,19 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
     private final Context context;
     private final OnItemClickListener listener;
     private DecimalFormat priceFormat = new DecimalFormat("0.00");
+    private Spannable.Factory spannableFactory;
 
     public CryptoListAdapter(Context context, OnItemClickListener listener) {
         this.context = context;
         this.cryptoDataList = new ArrayList<>();
         this.listener = listener;
+
+        spannableFactory = new Spannable.Factory(){
+            @Override
+            public Spannable newSpannable(CharSequence source) {
+                return (Spannable) source;
+            }
+        };
     }
 
     @NonNull
@@ -37,9 +45,13 @@ public class CryptoListAdapter extends RecyclerView.Adapter<CryptoListAdapter.Vi
 
         // Inflate the custom layout
         View cryptoView = inflater.inflate(R.layout.crypto_list_item, parent, false);
+        CryptoListAdapter.ViewHolder viewHolder = new ViewHolder(cryptoView);
 
+        viewHolder.oneHourChange.setSpannableFactory(spannableFactory);
+        viewHolder.oneDayChange.setSpannableFactory(spannableFactory);
+        viewHolder.oneWeekChange.setSpannableFactory(spannableFactory);
         // Return a new holder instance
-        return new ViewHolder(cryptoView);
+        return viewHolder;
     }
 
     @Override
