@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="colorAccent">@color/purple_500</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -22,4 +23,8 @@
     <style name="Theme.CryptoManager.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.CryptoManager.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.CryptoManager.ImageButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/purple_500</item>
+    </style>
 </resources>
