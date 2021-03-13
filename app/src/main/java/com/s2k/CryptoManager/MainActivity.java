@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         Log.d(TAG, "Message received: DB_OHLC_LOAD");
                         List<OHLC> ohclList = Arrays.asList((OHLC[]) msg.obj);
                         if (ohclList.isEmpty()) {
-                            Toast.makeText(MainActivity.this, "OHLC data is not available", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Offline OHLC data is not available", Toast.LENGTH_SHORT).show();
                         } else {
                             dialogFragment = new OhlcDialogFragment(loadingSymbol, ohclList);
                             dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
@@ -183,11 +183,16 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
                         Log.d(TAG, "Message received: NET_OHLC_LOAD");
                         ohclList = Arrays.asList((OHLC[]) msg.obj);
                         Collections.reverse(ohclList);
-                        dialogFragment = new OhlcDialogFragment(loadingSymbol, ohclList);
-                        dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
 
-                        threadPool.execute(DatabaseManager.getInstance()
-                                .updateOHLCList(loadingSymbol, ohclList, handler));
+                        if (ohclList.isEmpty()) {
+                            Toast.makeText(MainActivity.this, "OHLC data for this coin is not available", Toast.LENGTH_SHORT).show();
+                        } else {
+                            dialogFragment = new OhlcDialogFragment(loadingSymbol, ohclList);
+                            dialogFragment.show(getSupportFragmentManager(), "ohcl chart");
+
+                            threadPool.execute(DatabaseManager.getInstance()
+                                    .updateOHLCList(loadingSymbol, ohclList, handler));
+                        }
 
                         isLoadingOhlc = false;
                         loadingSymbol = null;

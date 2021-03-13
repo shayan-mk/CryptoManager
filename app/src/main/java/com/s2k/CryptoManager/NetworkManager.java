@@ -137,6 +137,7 @@ public class NetworkManager {
                 Message message = new Message();
                 message.what = MainActivity.NET_OHLC_LOAD;
                 message.arg1 = 0;
+                message.obj = new OHLC[0];
                 handler.sendMessage(message);
                 Log.v("TAG", e.getMessage());
             }
