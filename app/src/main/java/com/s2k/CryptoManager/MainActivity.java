@@ -81,15 +81,15 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
             if (isRefreshing || isLoadingMore) {
                 return;
             }
-            isRefreshing = true;
-            showProgressBar();
 
             if (isConnectedToTheInternet()) {
+                isRefreshing = true;
+                showProgressBar();
+
                 threadPool.execute(NetworkManager.getInstance()
                         .loadCryptoList(1, handler));
             } else {
-                threadPool.execute(DatabaseManager.getInstance()
-                        .loadCryptoList(0, handler));
+                Toast.makeText(MainActivity.this, "Turn on the internet to refresh", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -135,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements CryptoListAdapter
 
                         if (cryptoDataList.size() == 0 && adapter.getItemCount() == 0) {
                             Toast.makeText(MainActivity.this, "There is no data to show", Toast.LENGTH_SHORT).show();
+                        } else if (cryptoDataList.size() == 0) {
+                            Toast.makeText(MainActivity.this, "There is no more offline data to show", Toast.LENGTH_SHORT).show();
                         }
 
                         handleProgressBar();
